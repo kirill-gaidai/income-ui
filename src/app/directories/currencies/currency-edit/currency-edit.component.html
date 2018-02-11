@@ -1,0 +1,35 @@
+<form [formGroup]="currencyEditForm" (submit)="doOnBtSaveClick()">
+
+  <div class="form-group">
+    <label for="id">#</label>
+    <input id="id" type="text" class="form-control" readonly formControlName="id">
+  </div>
+
+  <div class="form-group">
+    <label for="code">Код</label>
+    <input id="code" type="text" class="form-control" formControlName="code">
+    <span
+      *ngIf="!currencyEditForm.get('code').valid && currencyEditForm.get('code').touched"
+      class="help-block">3 буквы A-Z</span>
+  </div>
+
+  <div class="form-group">
+    <label for="title">Наименование</label>
+    <input id="title" type="text" class="form-control" formControlName="title">
+    <span
+      *ngIf="!currencyEditForm.get('title').valid && currencyEditForm.get('title').touched"
+      class="help-block">От 1 до 250 символов</span>
+  </div>
+
+  <div class="form-group">
+    <label for="accuracy">Точность</label>
+    <input id="accuracy" type="text" class="form-control" formControlName="accuracy">
+    <span
+      *ngIf="!currencyEditForm.get('accuracy').valid && currencyEditForm.get('accuracy').touched"
+      class="help-block">В интервале от 0 до 4</span>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Сохранить</button>
+  <button class="btn btn-warning" type="button">Отменить</button>
+
+</form>

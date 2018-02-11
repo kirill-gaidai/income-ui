@@ -7,7 +7,7 @@ import {DropdownDirective} from './directives/dropdown.directive';
 import { HomeComponent } from './home/home.component';
 import { CurrenciesComponent } from './directories/currencies/currencies.component';
 import {AppRoutingModule} from './app-routing.module';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {CurrencyService} from './services/currency.service';
 import { CurrencyItemComponent } from './directories/currencies/currency-item/currency-item.component';
@@ -25,7 +25,7 @@ import { CurrencyEditComponent } from './directories/currencies/currency-edit/cu
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     AppRoutingModule
   ],

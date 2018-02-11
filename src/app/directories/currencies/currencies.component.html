@@ -1,13 +1,19 @@
 <div class="row">
+
   <div class="col-xs-8">
+    <button class="btn btn-info" (click)="doOnBtAddClick()">Добавить</button>
+    <button class="btn btn-primary">Обновить</button>
+
+    <hr>
+
     <table class="table">
       <tr>
-        <th>ID</th>
-        <th>Code</th>
-        <th>Title</th>
-        <th>Accuracy</th>
+        <th>#</th>
+        <th>Код</th>
+        <th>Наименование</th>
+        <th>Точность</th>
       </tr>
-      <tr *ngFor="let currency of currencies">
+      <tr *ngFor="let currency of currencies" [routerLink]="currency.id">
         <td>{{currency.id}}</td>
         <td>{{currency.code}}</td>
         <td>{{currency.title}}</td>
@@ -15,7 +21,9 @@
       </tr>
     </table>
   </div>
+
   <div class="col-xs-4">
     <router-outlet></router-outlet>
   </div>
+
 </div>

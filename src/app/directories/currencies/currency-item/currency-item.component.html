@@ -1,3 +1,21 @@
-<p>
-  currency-item works!
-</p>
+<table class="table">
+  <tr>
+    <th>#</th>
+    <td>{{currency.id}}</td>
+  </tr>
+  <tr>
+    <th>Код</th>
+    <td>{{currency.code}}</td>
+  </tr>
+  <tr>
+    <th>Наименование</th>
+    <td>{{currency.title}}</td>
+  </tr>
+  <tr>
+    <th>Точность</th>
+    <td>{{currency.accuracy}}</td>
+  </tr>
+</table>
+
+<button class="btn btn-primary" type="button" (click)="doOnBtEditClick()">Редактировать</button>
+<button class="btn btn-danger" type="button">Удалить</button>
