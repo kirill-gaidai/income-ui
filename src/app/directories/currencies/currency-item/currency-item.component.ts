@@ -11,27 +11,34 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class CurrencyItemComponent implements OnInit, OnDestroy {
 
+  private id: number;
   private currency: Currency;
-  private subscription: Subscription;
+  private activatedRouteParamsSubscription: Subscription;
 
   constructor(private currencyService: CurrencyService,
               private activatedRoute: ActivatedRoute,
               private router: Router) {
   }
 
-  ngOnInit(): void {
-    this.currency = this.currencyService.get(+this.activatedRoute.snapshot.params['id']);
-    this.subscription = this.activatedRoute.params.subscribe((params => {
-      this.currency = this.currencyService.get(+params['id']);
+  public ngOnInit(): void {
+    this.id = +this.activatedRoute.snapshot.params['id'];
+    this.currency = this.currencyService.get(this.id);
+    this.activatedRouteParamsSubscription = this.activatedRoute.params.subscribe((params => {
+      this.id = +params['id'];
+      this.currency = this.currencyService.get(this.id);
     }));
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  public ngOnDestroy(): void {
+    this.activatedRouteParamsSubscription.unsubscribe();
   }
 
-  doOnBtEditClick(): void {
+  public doOnBtEditClick(): void {
     this.router.navigate(['edit'], {relativeTo: this.activatedRoute});
   }
 
+  public doOnBtDeleteClick() {
+    this.currencyService.delete(this.id);
+    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+  }
 }

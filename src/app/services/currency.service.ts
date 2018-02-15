@@ -6,7 +6,7 @@ import {Subject} from 'rxjs/Subject';
 @Injectable()
 export class CurrencyService implements OnInit {
 
-  private currenciesChangedSubscription: Subscription;
+  public currenciesChangedSubject: Subject<Currency[]> = new Subject<Currency[]>();
 
   private currencies: Currency[] = [
     new Currency(1, 'BYN', 'Belarussian rouble', 2),
@@ -25,34 +25,49 @@ export class CurrencyService implements OnInit {
   }
 
   public get(id: number): Currency {
-    const index: number = this.getIndex(id);
-    return index !== -1 ? this.currencies[index] : null;
-  }
-
-  public getIndex(id: number): number {
-    for (let index = 0; index < this.currencies.length; index++) {
-      if (id === this.currencies[index].id) {
-        return index;
+    for (const currency of this.currencies) {
+      if (id === currency.id) {
+        return currency;
       }
     }
-    return -1;
+    return null;
   }
 
-  public create(currency: Currency): void {
+  public create(currency: Currency): Currency {
+    currency.id = this.getNextId();
     this.currencies.push(currency);
+    this.currenciesChangedSubject.next(this.currencies);
+    return currency;
   }
 
   public update(currency: Currency): void {
-    const index = this.getIndex(currency.id);
-    if (index !== -1) {
-      this.currencies[index] = currency;
+    for (let index = 0; index < this.currencies.length; index++) {
+      if (currency.id === this.currencies[index].id) {
+        this.currencies[index] = currency;
+        this.currenciesChangedSubject.next(this.currencies);
+        return;
+      }
     }
   }
 
-  public delete(index: number): void {
-    if (index >= 0 && index < this.currencies.length) {
-      this.currencies.splice(index, 1);
+  public delete(id: number): void {
+    for (let index = 0; index < this.currencies.length; index++) {
+      if (id === this.currencies[index].id) {
+        this.currencies.splice(index, 1);
+        this.currenciesChangedSubject.next(this.currencies);
+        return;
+      }
     }
+  }
+
+  private getNextId(): number {
+    let max = 0;
+    this.currencies.forEach((currency: Currency) => {
+      if (max < currency.id) {
+        max = currency.id;
+      }
+    });
+    return max + 1;
   }
 
 }
