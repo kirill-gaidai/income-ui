@@ -1,10 +1,9 @@
-import {EventEmitter, Injectable, OnInit} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Currency} from '../models/currency.model';
-import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 
 @Injectable()
-export class CurrencyService implements OnInit {
+export class CurrencyService implements OnInit, OnDestroy {
 
   public currenciesChangedSubject: Subject<Currency[]> = new Subject<Currency[]>();
 
@@ -17,7 +16,10 @@ export class CurrencyService implements OnInit {
   constructor() {
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
+  }
+
+  public ngOnDestroy(): void {
   }
 
   public getList(): Currency[] {

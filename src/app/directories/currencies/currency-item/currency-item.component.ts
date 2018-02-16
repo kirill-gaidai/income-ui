@@ -41,4 +41,5 @@ export class CurrencyItemComponent implements OnInit, OnDestroy {
     this.currencyService.delete(this.id);
     this.router.navigate(['../'], {relativeTo: this.activatedRoute});
   }
+
 }

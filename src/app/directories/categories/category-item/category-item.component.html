@@ -1,0 +1,17 @@
+<table class="table">
+  <tr>
+    <th>#</th>
+    <td>{{category.id}}</td>
+  </tr>
+  <tr>
+    <th>Сортировка</th>
+    <td>{{category.sort}}</td>
+  </tr>
+  <tr>
+    <th>Наименование</th>
+    <td>{{category.title}}</td>
+  </tr>
+</table>
+
+<button class="btn btn-primary" type="button" (click)="doOnBtEditClick()">Редактировать</button>
+<button class="btn btn-danger" type="button" (click)="doOnBtDeleteClick()">Удалить</button>

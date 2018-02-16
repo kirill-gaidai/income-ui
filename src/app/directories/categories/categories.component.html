@@ -1,0 +1,27 @@
+<div class="row">
+
+  <div class="col-xs-8">
+    <button class="btn btn-primary" (click)="doOnBtAddClick()">Добавить</button>
+    <button class="btn btn-primary" (click)="doOnBtRefreshClick()">Обновить</button>
+
+    <hr>
+
+    <table class="table">
+      <tr>
+        <th>#</th>
+        <th>Сортировка</th>
+        <th>Наименование</th>
+      </tr>
+      <tr *ngFor="let category of categories" [routerLink]="category.id">
+        <td>{{category.id}}</td>
+        <td>{{category.sort}}</td>
+        <td>{{category.title}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="col-xs-4">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
