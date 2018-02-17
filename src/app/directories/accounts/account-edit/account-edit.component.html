@@ -1,0 +1,41 @@
+<form [formGroup]="accountEditForm" (submit)="doOnBtSaveClick()">
+
+  <div class="form-group">
+    <label for="id">#</label>
+    <input id="id" type="text" class="form-control" readonly formControlName="id">
+  </div>
+
+  <div class="form-group">
+    <label for="currencyId">Валюта</label>
+    <select id="currencyId" class="form-control" formControlName="currencyId">
+      <option
+        *ngFor="let currency of currencies; let i = index"
+        [value]="currency.id"
+        [selected]="i === 0"
+      >[{{currency.code}}] {{currency.title}}</option>
+    </select>
+    <span
+      *ngIf="!accountEditForm.get('currencyId').valid && accountEditForm.get('currencyId').touched"
+      >Обязательное</span>
+  </div>
+
+  <div class="form-group">
+    <label for="sort">Сортировка</label>
+    <input id="sort" type="text" class="form-control" formControlName="sort">
+    <span
+      *ngIf="!accountEditForm.get('sort').valid && accountEditForm.get('sort').touched"
+      class="help-block">От 1 до 10 символов</span>
+  </div>
+
+  <div class="form-group">
+    <label for="title">Наименование</label>
+    <input id="title" type="text" class="form-control" formControlName="title">
+    <span
+      *ngIf="!accountEditForm.get('title').valid && accountEditForm.get('title').touched"
+      class="help-block">От 1 до 250 символов</span>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Сохранить</button>
+  <button class="btn btn-warning" type="button">Отменить</button>
+
+</form>

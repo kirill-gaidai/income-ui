@@ -1,0 +1,25 @@
+<table class="table">
+  <tr>
+    <th>#</th>
+    <td>{{account.id}}</td>
+  </tr>
+  <tr>
+    <th>Код валюты</th>
+    <td>{{account.currencyCode}}</td>
+  </tr>
+  <tr>
+    <th>Наименование валюты</th>
+    <td>{{account.currencyTitle}}</td>
+  </tr>
+  <tr>
+    <th>Сортировка</th>
+    <td>{{account.sort}}</td>
+  </tr>
+  <tr>
+    <th>Наименование</th>
+    <td>{{account.title}}</td>
+  </tr>
+</table>
+
+<button class="btn btn-primary" type="button" (click)="doOnBtEditClick()">Редактировать</button>
+<button class="btn btn-danger" type="button" (click)="doOnBtDeleteClick()">Удалить</button>

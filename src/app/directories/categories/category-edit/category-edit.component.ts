@@ -3,7 +3,6 @@ import {CategoryService} from '../../../services/category.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Category} from '../../../models/category.model';
-import {Currency} from '../../../models/currency.model';
 
 @Component({
   selector: 'app-category-edit',

@@ -7,6 +7,10 @@ import {CurrencyItemComponent} from './directories/currencies/currency-item/curr
 import {CategoriesComponent} from './directories/categories/categories.component';
 import {CategoryEditComponent} from './directories/categories/category-edit/category-edit.component';
 import {CategoryItemComponent} from './directories/categories/category-item/category-item.component';
+import {AccountsComponent} from './directories/accounts/accounts.component';
+import {AccountEditComponent} from './directories/accounts/account-edit/account-edit.component';
+import {AccountItemComponent} from './directories/accounts/account-item/account-item.component';
+import {SummariesComponent} from './summaries/summaries.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
@@ -25,9 +29,17 @@ const appRoutes: Routes = [
           {path: ':id', component: CategoryItemComponent},
           {path: ':id/edit', component: CategoryEditComponent}
         ]
+      },
+      {
+        path: 'accounts', component: AccountsComponent, children: [
+          {path: 'new', component: AccountEditComponent},
+          {path: ':id', component: AccountItemComponent},
+          {path: ':id/edit', component: AccountEditComponent}
+        ]
       }
     ]
-  }
+  },
+  {path: 'summaries', component: SummariesComponent}
 ];
 
 @NgModule({

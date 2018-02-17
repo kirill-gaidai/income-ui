@@ -16,6 +16,11 @@ import { CategoriesComponent } from './directories/categories/categories.compone
 import { CategoryEditComponent } from './directories/categories/category-edit/category-edit.component';
 import { CategoryItemComponent } from './directories/categories/category-item/category-item.component';
 import {CategoryService} from './services/category.service';
+import { AccountsComponent } from './directories/accounts/accounts.component';
+import { AccountItemComponent } from './directories/accounts/account-item/account-item.component';
+import { AccountEditComponent } from './directories/accounts/account-edit/account-edit.component';
+import {AccountService} from './services/account.service';
+import { SummariesComponent } from './summaries/summaries.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +33,11 @@ import {CategoryService} from './services/category.service';
     CurrencyEditComponent,
     CategoriesComponent,
     CategoryEditComponent,
-    CategoryItemComponent
+    CategoryItemComponent,
+    AccountsComponent,
+    AccountItemComponent,
+    AccountEditComponent,
+    SummariesComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +47,8 @@ import {CategoryService} from './services/category.service';
   ],
   providers: [
     CurrencyService,
-    CategoryService
+    CategoryService,
+    AccountService
   ],
   bootstrap: [
     AppComponent

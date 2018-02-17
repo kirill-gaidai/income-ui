@@ -1,6 +1,7 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Currency} from '../models/currency.model';
 import {Subject} from 'rxjs/Subject';
+import {Account} from '../models/account.model';
 
 @Injectable()
 export class CurrencyService implements OnInit, OnDestroy {
@@ -8,9 +9,10 @@ export class CurrencyService implements OnInit, OnDestroy {
   public currenciesChangedSubject: Subject<Currency[]> = new Subject<Currency[]>();
 
   private currencies: Currency[] = [
-    new Currency(1, 'BYN', 'Belarussian rouble', 2),
-    new Currency(2, 'USD', 'US Dollar', 0),
-    new Currency(3, 'EUR', 'Euro', 2)
+    new Currency(1, 'BYN', 'Белорусский рубль', 2),
+    new Currency(2, 'USD', 'Доллар США', 0),
+    new Currency(3, 'EUR', 'Евро', 2),
+    new Currency(4, 'RUR', 'Российский рубль', 2)
   ];
 
   constructor() {
@@ -70,6 +72,16 @@ export class CurrencyService implements OnInit, OnDestroy {
       }
     });
     return max + 1;
+  }
+
+  public fillInfo(account: Account): Account {
+    for (const currency of this.currencies) {
+      if (currency.id === account.currencyId) {
+        account.currencyCode = currency.code;
+        account.currencyTitle = currency.title;
+        return account;
+      }
+    }
   }
 
 }

@@ -1,6 +1,6 @@
 export class Currency {
 
-  constructor(public id, public code, public title, public accuracy) {
+  constructor(public id: number, public code: string, public title: string, public accuracy: number) {
   }
 
 }
