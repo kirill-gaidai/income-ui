@@ -1,3 +1,71 @@
-<p>
-  summaries works!
-</p>
+<div class="col-xs-12">
+
+  <div class="row">
+    <form [formGroup]="summaryParamsForm" class="form-inline" (submit)="doOnBtSearchClick()">
+
+      <div class="form-group">
+        <label for="currencyId">Валюта</label>
+        <select id="currencyId" class="form-control" formControlName="currencyId">
+          <option *ngFor="let currency of currencies" [value]="currency.id">
+            [{{currency.code}}] {{currency.title}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="firstDay">дата с</label>
+        <input id="firstDay" type="date" class="form-control" formControlName="firstDay">
+      </div>
+
+      <div class="form-group">
+        <label for="lastDay">дата по</label>
+        <input id="lastDay" type="date" class="form-control" formControlName="lastDay">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Поиск</button>
+
+    </form>
+  </div>
+
+  <div class="row">
+    <form [formGroup]="accountsFilterForm" class="form-inline">
+      <div formArrayName="accounts" class="checkbox">
+        <label *ngFor="let accountControl of accountsFilterForm.get('accounts').controls; let i = index">
+          <input type="checkbox" [formControlName]="i"> {{accounts[i].title}}
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <form [formGroup]="categoriesFilterForm" class="form-inline">
+      <div formArrayName="categories" class="checkbox">
+        <label *ngFor="let categoryControl of categoriesFilterForm.get('categories').controls; let i = index">
+          <input type="checkbox" [formControlName]="i"> {{categories[i].title}}
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <table class="table table-bordered">
+      <tr>
+        <th>День</th>
+        <th>Разность</th>
+        <th *ngFor="let accountTitle of summaryTable.accountTitles">{{accountTitle}}</th>
+        <th>Сумма</th>
+        <th *ngFor="let categoryTitle of summaryTable.categoryTitles">{{categoryTitle}}</th>
+        <th>Сумма</th>
+      </tr>
+      <tr *ngFor="let row of summaryTable.rows">
+        <td>{{row.day | date:'dd.MM.yyyy' }}</td>
+        <td>{{row.difference}}</td>
+        <td *ngFor="let accountAmount of row.accountAmounts">{{accountAmount}}</td>
+        <td>{{row.accountAmountsSum}}</td>
+        <td *ngFor="let categoryAmount of row.categoryAmounts">{{categoryAmount}}</td>
+        <td>{{row.categoryAmountsSum}}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>

@@ -21,6 +21,7 @@ import { AccountItemComponent } from './directories/accounts/account-item/accoun
 import { AccountEditComponent } from './directories/accounts/account-edit/account-edit.component';
 import {AccountService} from './services/account.service';
 import { SummariesComponent } from './summaries/summaries.component';
+import {SummaryService} from './services/summary.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { SummariesComponent } from './summaries/summaries.component';
   providers: [
     CurrencyService,
     CategoryService,
-    AccountService
+    AccountService,
+    SummaryService
   ],
   bootstrap: [
     AppComponent

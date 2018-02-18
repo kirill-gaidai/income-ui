@@ -9,10 +9,10 @@ export class CurrencyService implements OnInit, OnDestroy {
   public currenciesChangedSubject: Subject<Currency[]> = new Subject<Currency[]>();
 
   private currencies: Currency[] = [
-    new Currency(1, 'BYN', 'Белорусский рубль', 2),
-    new Currency(2, 'USD', 'Доллар США', 0),
-    new Currency(3, 'EUR', 'Евро', 2),
-    new Currency(4, 'RUR', 'Российский рубль', 2)
+    new Currency(6, 'BYN', 'Белорусский рубль', 2),
+    new Currency(7, 'USD', 'Доллар США', 0),
+    new Currency(8, 'EUR', 'Евро', 2),
+    new Currency(9, 'RUR', 'Российский рубль', 2)
   ];
 
   constructor() {
