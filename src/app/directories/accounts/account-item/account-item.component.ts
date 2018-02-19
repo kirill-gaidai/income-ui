@@ -11,7 +11,6 @@ import {Account} from '../../../models/account.model';
 })
 export class AccountItemComponent implements OnInit, OnDestroy {
 
-  private id: number;
   private account: Account;
   private activatedRouteParamsSubscription: Subscription;
 
@@ -21,11 +20,9 @@ export class AccountItemComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.id = +this.activatedRoute.snapshot.params['id'];
-    this.account = this.accountService.get(this.id);
+    this.account = new Account(null, null, null, null, null, null);
     this.activatedRouteParamsSubscription = this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = +params['id'];
-      this.account = this.accountService.get(this.id);
+      this.accountService.get(+params['id']).subscribe((account: Account) => this.account = account);
     });
   }
 
@@ -38,8 +35,10 @@ export class AccountItemComponent implements OnInit, OnDestroy {
   }
 
   public doOnBtDeleteClick(): void {
-    this.accountService.delete(this.id);
-    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    this.accountService.delete(this.account.id).subscribe(() => {
+      this.accountService.accountsChangedSubject.next();
+      this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    });
   }
 
 }

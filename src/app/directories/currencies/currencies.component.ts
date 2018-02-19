@@ -11,8 +11,8 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class CurrenciesComponent implements OnInit, OnDestroy {
 
-  private currencies: Currency[];
   private currenciesChangedSubscription: Subscription;
+  private currencies: Currency[];
 
   constructor(private currencyService: CurrencyService,
               private activatedRoute: ActivatedRoute,
@@ -20,9 +20,10 @@ export class CurrenciesComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.currencies = this.currencyService.getList();
-    this.currenciesChangedSubscription = this.currencyService.currenciesChangedSubject.subscribe((currencies: Currency[]) => {
-      this.currencies = currencies;
+    this.currencies = [];
+    this.currencyService.getList().subscribe((currencies: Currency[]) => this.currencies = currencies);
+    this.currenciesChangedSubscription = this.currencyService.currenciesChangedSubject.subscribe(() => {
+      this.currencyService.getList().subscribe((currencies: Currency[]) => this.currencies = currencies);
     });
   }
 
@@ -35,7 +36,7 @@ export class CurrenciesComponent implements OnInit, OnDestroy {
   }
 
   public doOnBtRefreshClick(): void {
-    this.currencies = this.currencyService.getList();
+    this.currencyService.getList().subscribe((currencies: Currency[]) => this.currencies = currencies);
   }
 
 }

@@ -1,0 +1,54 @@
+<form [formGroup]="operationEditForm" (submit)="doOnBtSaveClick()">
+
+  <div class="form-group">
+    <label for="id">#</label>
+    <input id="id" type="text" class="form-control" readonly formControlName="id">
+  </div>
+
+  <div class="form-group">
+    <label for="day">День</label>
+    <input id="day" type="date" class="form-control" readonly formControlName="day">
+  </div>
+
+  <div class="form-group">
+    <label for="accountId">Счет</label>
+    <select id="accountId" class="form-control" formControlName="accountId">
+      <option *ngFor="let account of accounts" [value]="account.id">
+        [{{account.currencyCode}}] {{account.title}}
+      </option>
+    </select>
+    <span
+      *ngIf="!operationEditForm.get('accountId').valid && operationEditForm.get('accountId').touched"
+      class="help-block">Обязательное</span>
+  </div>
+
+  <div class="form-group">
+    <label for="categoryId">Категория</label>
+    <select id="categoryId" class="form-control" formControlName="categoryId">
+      <option *ngFor="let category of categories" [value]="category.id">{{category.title}}</option>
+    </select>
+    <span
+      *ngIf="!operationEditForm.get('categoryId').valid && operationEditForm.get('categoryId').touched"
+      class="help-block">Обязательное</span>
+  </div>
+
+  <div class="form-group">
+    <label for="amount">Сумма</label>
+    <input id="amount" type="number" class="form-control" formControlName="amount">
+    <span
+      *ngIf="!operationEditForm.get('amount').valid && operationEditForm.get('amount').touched"
+      class="help-block">Обязательное</span>
+  </div>
+
+  <div class="form-group">
+    <label for="note">Примечание</label>
+    <textarea id="note" class="form-control" formControlName="note"></textarea>
+    <span
+      *ngIf="!operationEditForm.get('note').valid && operationEditForm.get('note').touched"
+      class="help-block">От 1 до 250 символов</span>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Сохранить</button>
+  <button class="btn btn-warning" type="button">Отменить</button>
+
+</form>

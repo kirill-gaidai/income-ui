@@ -11,7 +11,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class AccountsComponent implements OnInit, OnDestroy {
 
-  private accountChangedSubscription: Subscription;
+  private accountsChangedSubscription: Subscription;
   private accounts: Account[];
 
   constructor(private accountService: AccountService,
@@ -20,14 +20,15 @@ export class AccountsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.accounts = this.accountService.getList();
-    this.accountChangedSubscription = this.accountService.accountsChangedSubject.subscribe((accounts: Account[]) => {
-      this.accounts = accounts;
+    this.accounts = [];
+    this.accountService.getList().subscribe((accounts: Account[]) => this.accounts = accounts);
+    this.accountsChangedSubscription = this.accountService.accountsChangedSubject.subscribe(() => {
+      this.accountService.getList().subscribe((accounts: Account[]) => this.accounts = accounts);
     });
   }
 
   public ngOnDestroy(): void {
-    this.accountChangedSubscription.unsubscribe();
+    this.accountsChangedSubscription.unsubscribe();
   }
 
   public doOnBtAddClick(): void {
@@ -35,7 +36,7 @@ export class AccountsComponent implements OnInit, OnDestroy {
   }
 
   public doOnBtRefreshClick(): void {
-    this.accounts = this.accountService.getList();
+    this.accountService.getList().subscribe((accounts: Account[]) => this.accounts = accounts);
   }
 
 }

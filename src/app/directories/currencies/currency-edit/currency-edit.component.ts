@@ -20,23 +20,24 @@ export class CurrencyEditComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.initForm(null);
     this.id = this.activatedRoute.snapshot.params['id'] ? +this.activatedRoute.snapshot.params['id'] : null;
     if (this.id !== null) {
-      const currency: Currency = this.currencyService.get(this.id);
-      this.currencyEditForm = new FormGroup({
-        'id': new FormControl(currency.id),
-        'code': new FormControl(currency.code, [Validators.required, Validators.pattern('[A-Z]{3}')]),
-        'title': new FormControl(currency.title, [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
-        'accuracy': new FormControl(currency.accuracy, [Validators.required, Validators.pattern('[0-4]{1}')])
-      });
-    } else {
-      this.currencyEditForm = new FormGroup({
-        'id': new FormControl(null),
-        'code': new FormControl(null, [Validators.required, Validators.pattern('[A-Z]{3}')]),
-        'title': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
-        'accuracy': new FormControl(null, [Validators.required, Validators.pattern('[0-4]{1}')])
-      });
+      this.currencyService.get(this.id).subscribe((currency: Currency) => this.initForm(currency));
     }
+  }
+
+  public initForm(currency: Currency): void {
+    this.currencyEditForm = new FormGroup({
+      'id': new FormControl(currency == null ? null : currency.id,
+        []),
+      'code': new FormControl(currency == null ? null : currency.code,
+        [Validators.required, Validators.pattern('[A-Z]{3}')]),
+      'title': new FormControl(currency == null ? null : currency.title,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
+      'accuracy': new FormControl(currency == null ? null : currency.accuracy,
+        [Validators.required, Validators.pattern('[0-4]{1}')])
+    });
   }
 
   public ngOnDestroy(): void {
@@ -44,21 +45,25 @@ export class CurrencyEditComponent implements OnInit, OnDestroy {
 
   public doOnBtSaveClick(): void {
     if (this.id === null) {
-      const currency: Currency = this.currencyService.create(new Currency(
+      this.currencyService.create(new Currency(
         +this.currencyEditForm.get('id').value,
         this.currencyEditForm.get('code').value,
         this.currencyEditForm.get('title').value,
         +this.currencyEditForm.get('accuracy').value
-      ));
-      this.router.navigate(['../', currency.id], {relativeTo: this.activatedRoute});
+      )).subscribe((currency: Currency) => {
+        this.currencyService.currenciesChangedSubject.next();
+        this.router.navigate(['../', currency.id], {relativeTo: this.activatedRoute});
+      });
     } else {
       this.currencyService.update(new Currency(
         +this.currencyEditForm.get('id').value,
         this.currencyEditForm.get('code').value,
         this.currencyEditForm.get('title').value,
         +this.currencyEditForm.get('accuracy').value
-      ));
-      this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+      )).subscribe((currency: Currency) => {
+        this.currencyService.currenciesChangedSubject.next();
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+      });
     }
   }
 

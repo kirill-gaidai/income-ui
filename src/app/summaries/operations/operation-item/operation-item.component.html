@@ -1,0 +1,37 @@
+<table class="table">
+  <tr>
+    <th>#</th>
+    <td>{{operation.id}}</td>
+  </tr>
+  <tr>
+    <th>Код счета</th>
+    <td>{{operation.accountId}}</td>
+  </tr>
+  <tr>
+    <th>Наименование счета</th>
+    <td>{{operation.accountTitle}}</td>
+  </tr>
+  <tr>
+    <th>Код категории</th>
+    <td>{{operation.categoryId}}</td>
+  </tr>
+  <tr>
+    <th>Наименование категории</th>
+    <td>{{operation.categoryTitle}}</td>
+  </tr>
+  <tr>
+    <th>День</th>
+    <td>{{operation.day | date:'dd.MM.yyyy'}}</td>
+  </tr>
+  <tr>
+    <th>Сумма</th>
+    <td>{{operation.amount}}</td>
+  </tr>
+  <tr>
+    <th>Примечание</th>
+    <td>{{operation.note}}</td>
+  </tr>
+</table>
+
+<button class="btn btn-primary" type="button" (click)="doOnBtEditClick()">Редактировать</button>
+<button class="btn btn-danger" type="button" (click)="doOnBtDeleteClick()">Удалить</button>

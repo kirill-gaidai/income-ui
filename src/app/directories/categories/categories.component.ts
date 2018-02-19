@@ -11,8 +11,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
 
-  private categories: Category[];
   private categoriesChangedSubscription: Subscription;
+  private categories: Category[];
 
   constructor(private categoryService: CategoryService,
               private activatedRoute: ActivatedRoute,
@@ -20,9 +20,10 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.categories = this.categoryService.getList();
-    this.categoriesChangedSubscription = this.categoryService.categoriesChangedSubject.subscribe((categories: Category[]) => {
-      this.categories = categories;
+    this.categories = [];
+    this.categoryService.getList().subscribe((categories: Category[]) => this.categories = categories);
+    this.categoriesChangedSubscription = this.categoryService.categoriesChangedSubject.subscribe(() => {
+      this.categoryService.getList().subscribe((categories: Category[]) => this.categories = categories);
     });
   }
 
@@ -35,7 +36,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   public doOnBtRefreshClick(): void {
-    this.categories = this.categoryService.getList();
+    this.categoryService.getList().subscribe((categories: Category[]) => this.categories = categories);
   }
 
 }

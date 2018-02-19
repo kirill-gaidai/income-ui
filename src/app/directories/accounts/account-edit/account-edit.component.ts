@@ -24,24 +24,26 @@ export class AccountEditComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.initForm(null);
     this.id = this.activatedRoute.snapshot.params['id'] ? +this.activatedRoute.snapshot.params['id'] : null;
     if (this.id != null) {
-      const account: Account = this.accountService.get(this.id);
-      this.accountEditForm = new FormGroup({
-        'id': new FormControl(account.id),
-        'currencyId': new FormControl(account.currencyId, [Validators.required]),
-        'sort': new FormControl(account.sort, [Validators.required, Validators.minLength(1), Validators.maxLength(10)]),
-        'title': new FormControl(account.title, [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
-      });
-    } else {
-      this.accountEditForm = new FormGroup({
-        'id': new FormControl(null),
-        'currencyId': new FormControl(null, [Validators.required]),
-        'sort': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(10)]),
-        'title': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
-      });
+      this.accountService.get(this.id).subscribe((account: Account) => this.initForm(account));
     }
-    this.currencies = this.currencyService.getList();
+    this.currencies = [];
+    this.currencyService.getList().subscribe((currencies: Currency[]) => this.currencies = currencies);
+  }
+
+  private initForm(account: Account): void {
+    this.accountEditForm = new FormGroup({
+      'id': new FormControl(account == null ? null : account.id,
+        []),
+      'currencyId': new FormControl(account == null ? null : account.currencyId,
+        [Validators.required]),
+      'sort': new FormControl(account == null ? null : account.sort,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(10)]),
+      'title': new FormControl(account == null ? null : account.title,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(250)])
+    });
   }
 
   public ngOnDestroy(): void {
@@ -49,21 +51,25 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
   public doOnBtSaveClick(): void {
     if (this.id === null) {
-      const account: Account = this.accountService.create(this.currencyService.fillInfo(new Account(
+      this.accountService.create(new Account(
         +this.accountEditForm.get('id').value,
         +this.accountEditForm.get('currencyId').value, null, null,
         this.accountEditForm.get('sort').value,
         this.accountEditForm.get('title').value
-      )));
-      this.router.navigate(['../', account.id], {relativeTo: this.activatedRoute});
+      )).subscribe((account: Account) => {
+        this.accountService.accountsChangedSubject.next();
+        this.router.navigate(['../', account.id], {relativeTo: this.activatedRoute});
+      });
     } else {
-      this.accountService.update(this.currencyService.fillInfo(new Account(
+      this.accountService.update(new Account(
         +this.accountEditForm.get('id').value,
         +this.accountEditForm.get('currencyId').value, null, null,
         this.accountEditForm.get('sort').value,
         this.accountEditForm.get('title').value
-      )));
-      this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+      )).subscribe((account: Account) => {
+        this.accountService.accountsChangedSubject.next();
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+      });
     }
   }
 

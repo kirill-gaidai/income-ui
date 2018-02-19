@@ -14,10 +14,21 @@ import {Category} from '../models/category.model';
 @Injectable()
 export class SummaryService implements OnInit, OnDestroy {
 
+  public summariesChangedObservable: Observable<void> = new Observable<void>();
+
+  /**
+   * Преобразует JSON, который вернул сервер в отображаемую таблицу
+   * @param {Summary} summary - JSON
+   * @param {number[]} checkedAccountIds счета, которые нужно отобразить
+   * @param {number[]} checkedCategoryIds категории, которые нужно отобразить
+   * @returns {SummaryTable} объект, по которому строится таблица
+   */
   public static transform(summary: Summary, checkedAccountIds: number[], checkedCategoryIds: number[]): SummaryTable {
     const balanceMap: Map<number, Map<number, Balance>> = this.balanceListToMap(summary.balances);
     const operationMap: Map<number, Map<number, Operation[]>> = this.operationListToMap(summary.operations);
     let initialAccountAmounts: number[] = this.initializeAccountAmounts(summary.initialBalances, checkedAccountIds);
+    const categoryAmounts: number[] = new Array(checkedCategoryIds.length).fill(0);
+    let categoryAmountsSum = 0;
 
     const summaryRows: SummaryRow[] = [];
     for (let day = DateUtil.cloneDate(summary.firstDay); day <= summary.lastDay; day = DateUtil.incrementDay(day)) {
@@ -28,6 +39,8 @@ export class SummaryService implements OnInit, OnDestroy {
         checkedAccountIds, checkedCategoryIds);
       summaryRows.push(summaryRow);
       initialAccountAmounts = summaryRow.accountAmounts;
+      summaryRow.categoryAmounts.forEach(((value, index) => categoryAmounts[index] += value));
+      categoryAmountsSum += summaryRow.categoryAmountsSum;
     }
 
     const accountTitles: string[] = summary.accounts.reduce((result: string[], account: Account) => {
@@ -46,7 +59,11 @@ export class SummaryService implements OnInit, OnDestroy {
       return result;
     }, new Array(checkedCategoryIds.length).fill(''));
 
-    return new SummaryTable(accountTitles, categoryTitles, summaryRows);
+    return new SummaryTable(
+      accountTitles, categoryTitles,
+      checkedAccountIds, checkedCategoryIds,
+      summaryRows,
+      categoryAmounts, categoryAmountsSum);
   }
 
   private static buildRow(day: Date, initialAccountAmounts: number[],
@@ -81,7 +98,11 @@ export class SummaryService implements OnInit, OnDestroy {
       }
     });
     const operationAmountsSum = categoryAmounts.reduce((summ: number, value: number) => summ + value, 0);
-    difference += operationAmountsSum;
+    operationDayMap.forEach(((operationList: Operation[]) => {
+      difference += operationList.reduce((sum: number, operation: Operation) => {
+        return checkedAccountIds.indexOf(operation.accountId) === -1 ? sum : sum + operation.amount;
+      }, 0);
+    }));
 
     return new SummaryRow(day, difference,
       accountAmounts, balances, accountAmountsSum,
@@ -151,16 +172,12 @@ export class SummaryService implements OnInit, OnDestroy {
   }
 
   public get(currencyId: number, firstDay: Date, lastDay: Date): Observable<Summary> {
-    const headers: Headers = new Headers({
-      'Access-Control-Allow-Origin': '*'
-    });
     const urlSearchParams: URLSearchParams = new URLSearchParams('');
     urlSearchParams.append('currency_id', currencyId.toString());
     urlSearchParams.append('first_day', DateUtil.dateToStr(firstDay));
     urlSearchParams.append('last_day', DateUtil.dateToStr(lastDay));
     return this.http.get('http://192.168.56.1:8080/income-dev/rest/summaries', {
-      params: urlSearchParams,
-      headers: headers
+      params: urlSearchParams
     }).map((response: Response) => {
       const result = response.json();
       result.firstDay = DateUtil.strToDate(result.firstDay);

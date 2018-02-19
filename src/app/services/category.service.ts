@@ -1,19 +1,17 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Category} from '../models/category.model';
 import {Subject} from 'rxjs/Subject';
+import {Http, Response} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class CategoryService implements OnInit, OnDestroy {
 
-  public categoriesChangedSubject: Subject<Category[]> = new Subject<Category[]>();
+  public categoriesChangedSubject: Subject<void> = new Subject<void>();
 
-  private categories: Category[] = [
-    new Category(1, '01', 'Перемещение'),
-    new Category(2, '02', 'Продукты'),
-    new Category(3, '03', 'Хозтовары')
-  ];
+  private CATEGORIES_URL = 'http://192.168.56.1:8080/income-dev/rest/categories';
 
-  constructor() {
+  constructor(private http: Http) {
   }
 
   public ngOnInit(): void {
@@ -22,54 +20,29 @@ export class CategoryService implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
   }
 
-  public getList(): Category[] {
-    return this.categories.slice();
+  public getList(): Observable<Category[]> {
+    return this.http.get(this.CATEGORIES_URL)
+      .map((response: Response) => response.json());
   }
 
-  public get(id: number): Category {
-    for (const category of this.categories) {
-      if (id === category.id) {
-        return category;
-      }
-    }
-    return null;
+  public get(id: number): Observable<Category> {
+    return this.http.get(this.CATEGORIES_URL + '/' + id)
+      .map((response: Response) => response.json());
   }
 
-  public create(category: Category): Category {
-    category.id = this.getNextId();
-    this.categories.push(category);
-    this.categoriesChangedSubject.next(this.categories);
-    return category;
+  public create(category: Category): Observable<Category> {
+    return this.http.post(this.CATEGORIES_URL, category)
+      .map((response: Response) => response.json());
   }
 
-  public update(category: Category): void {
-    for (let index = 0; index < this.categories.length; index++) {
-      if (category.id === this.categories[index].id) {
-        this.categories[index] = category;
-        this.categoriesChangedSubject.next(this.categories);
-        return;
-      }
-    }
+  public update(category: Category): Observable<Category> {
+    return this.http.put(this.CATEGORIES_URL, category)
+      .map((response: Response) => response.json());
   }
 
-  public delete(id: number): void {
-    for (let index = 0; index < this.categories.length; index++) {
-      if (id === this.categories[index].id) {
-        this.categories.splice(index, 1);
-        this.categoriesChangedSubject.next(this.categories);
-        return;
-      }
-    }
-  }
-
-  private getNextId(): number {
-    let max = 0;
-    this.categories.forEach((category: Category) => {
-      if (max < category.id) {
-        max = category.id;
-      }
-    });
-    return max + 1;
+  public delete(id: number): Observable<void> {
+    return this.http.delete(this.CATEGORIES_URL + '/' + id)
+      .map((response: Response) => {});
   }
 
 }

@@ -20,21 +20,22 @@ export class CategoryEditComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.initForm(null);
     this.id = this.activatedRoute.snapshot.params['id'] ? +this.activatedRoute.snapshot.params['id'] : null;
     if (this.id != null) {
-      const category: Category = this.categoryService.get(this.id);
-      this.categoryEditForm = new FormGroup({
-        'id': new FormControl(category.id),
-        'sort': new FormControl(category.sort, [Validators.required, Validators.minLength(1), Validators.maxLength(10)]),
-        'title': new FormControl(category.title, [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
-      });
-    } else {
-      this.categoryEditForm = new FormGroup({
-        'id': new FormControl(null),
-        'sort': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(10)]),
-        'title': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
-      });
+      this.categoryService.get(this.id).subscribe((category: Category) => this.initForm(category));
     }
+  }
+
+  private initForm(category: Category): void {
+    this.categoryEditForm = new FormGroup({
+      'id': new FormControl(category == null ? null : category.id,
+        []),
+      'sort': new FormControl(category == null ? null : category.sort,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(10)]),
+      'title': new FormControl(category == null ? null : category.title,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
+    });
   }
 
   public ngOnDestroy(): void {
@@ -42,19 +43,23 @@ export class CategoryEditComponent implements OnInit, OnDestroy {
 
   public doOnBtSaveClick(): void {
     if (this.id === null) {
-      const category: Category = this.categoryService.create(new Category(
+      this.categoryService.create(new Category(
         +this.categoryEditForm.get('id').value,
         this.categoryEditForm.get('sort').value,
         this.categoryEditForm.get('title').value
-      ));
-      this.router.navigate(['../', category.id], {relativeTo: this.activatedRoute});
+      )).subscribe((category: Category) => {
+        this.categoryService.categoriesChangedSubject.next();
+        this.router.navigate(['../', category.id], {relativeTo: this.activatedRoute});
+      });
     } else {
       this.categoryService.update(new Category(
         +this.categoryEditForm.get('id').value,
         this.categoryEditForm.get('sort').value,
         this.categoryEditForm.get('title').value
-      ));
-      this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+      )).subscribe((category: Category) => {
+        this.categoryService.categoriesChangedSubject.next();
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+      });
     }
   }
 

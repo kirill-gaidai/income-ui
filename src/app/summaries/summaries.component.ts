@@ -23,6 +23,7 @@ export class SummariesComponent implements OnInit, OnDestroy {
   private currencies: Currency[];
   private accounts: Account[];
   private categories: Category[];
+
   private summaryTable: SummaryTable;
 
   constructor(private summaryService: SummaryService,
@@ -30,15 +31,17 @@ export class SummariesComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.currencies = this.currencyService.getList();
+    this.currencies = [];
+    this.currencyService.getList().subscribe((currencies: Currency[]) => this.currencies = currencies);
+
     this.accounts = [];
     this.categories = [];
-    this.summaryTable = new SummaryTable([], [], []);
+    this.summaryTable = new SummaryTable([], [], [], [], [], [], 0);
 
     this.summaryParamsForm = new FormGroup({
       'firstDay': new FormControl('2017-12-01'),
       'lastDay': new FormControl('2017-12-05'),
-      'currencyId': new FormControl(this.currencies[0].id)
+      'currencyId': new FormControl(null)
     });
     this.accountsFilterForm = new FormGroup({
       'accounts': new FormArray([])

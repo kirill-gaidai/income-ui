@@ -11,7 +11,6 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class CategoryItemComponent implements OnInit, OnDestroy {
 
-  private id: number;
   private category: Category;
   private activatedRouteParamsSubscription: Subscription;
 
@@ -21,11 +20,9 @@ export class CategoryItemComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.id = +this.activatedRoute.snapshot.params['id'];
-    this.category = this.categoryService.get(this.id);
+    this.category = new Category(null, null, null);
     this.activatedRouteParamsSubscription = this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = +params['id'];
-      this.category = this.categoryService.get(this.id);
+      this.categoryService.get(+params['id']).subscribe((category: Category) => this.category = category);
     });
   }
 
@@ -38,8 +35,10 @@ export class CategoryItemComponent implements OnInit, OnDestroy {
   }
 
   public doOnBtDeleteClick(): void {
-    this.categoryService.delete(this.id);
-    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    this.categoryService.delete(this.category.id).subscribe(() => {
+      this.categoryService.categoriesChangedSubject.next();
+      this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    });
   }
 
 }

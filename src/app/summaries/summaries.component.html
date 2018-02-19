@@ -60,12 +60,48 @@
       <tr *ngFor="let row of summaryTable.rows">
         <td>{{row.day | date:'dd.MM.yyyy' }}</td>
         <td>{{row.difference}}</td>
-        <td *ngFor="let accountAmount of row.accountAmounts">{{accountAmount}}</td>
+        <td
+          *ngFor="let accountAmount of row.accountAmounts; let i = index"
+          routerLink="balance"
+          [queryParams]="{
+            day: row.day | date:'yyyy-MM-dd',
+            account_id: summaryTable.accountIds[i]
+          }"
+        >{{accountAmount}}</td>
         <td>{{row.accountAmountsSum}}</td>
-        <td *ngFor="let categoryAmount of row.categoryAmounts">{{categoryAmount}}</td>
-        <td>{{row.categoryAmountsSum}}</td>
+        <td
+          *ngFor="let categoryAmount of row.categoryAmounts; let i = index"
+          routerLink="operations"
+          [queryParams]="{
+            day: row.day | date:'yyyy-MM-dd',
+            account_id: summaryTable.accountIds,
+            category_id: summaryTable.categoryIds[i]
+          }"
+        >{{categoryAmount}}</td>
+        <td
+          routerLink="operations"
+          [queryParams]="{
+            day: row.day | date:'yyyy-MM-dd',
+            account_id: summaryTable.accountIds,
+            category_id: summaryTable.categoryIds
+          }"
+        >{{row.categoryAmountsSum}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <th *ngFor="let accountTitle of summaryTable.accountTitles"></th>
+        <th></th>
+        <th *ngFor="let categoryAmount of summaryTable.categoryAmounts">{{categoryAmount}}</th>
+        <th>{{summaryTable.categoryAmountsSum}}</th>
       </tr>
     </table>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 
 </div>

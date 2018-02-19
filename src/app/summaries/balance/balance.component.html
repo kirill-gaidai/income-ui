@@ -1,0 +1,20 @@
+<form [formGroup]="balanceEditForm" (submit)="doOnBtSaveClick()">
+  <div class="form-group">
+    <label for="accountTitle">Наименование счета</label>
+    <input id="accountTitle" type="text" class="form-control" formControlName="accountTitle" readonly>
+  </div>
+  <div class="form-group">
+    <label for="day">День</label>
+    <input id="day" type="date" class="form-control" formControlName="day" readonly>
+  </div>
+  <div class="form-group">
+    <label for="amount">Остаток</label>
+    <input id="amount" type="text" class="form-control" formControlName="amount">
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" formControlName="manual"> Зафиксировать</label>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Сохранить</button>
+  <button type="button" class="btn btn-primary" (click)="doOnBtCancelClick()">Отменить</button>
+</form>

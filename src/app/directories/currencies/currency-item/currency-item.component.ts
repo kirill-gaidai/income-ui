@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Currency} from '../../../models/currency.model';
 import {CurrencyService} from '../../../services/currency.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
@@ -11,7 +11,6 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class CurrencyItemComponent implements OnInit, OnDestroy {
 
-  private id: number;
   private currency: Currency;
   private activatedRouteParamsSubscription: Subscription;
 
@@ -21,11 +20,9 @@ export class CurrencyItemComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.id = +this.activatedRoute.snapshot.params['id'];
-    this.currency = this.currencyService.get(this.id);
-    this.activatedRouteParamsSubscription = this.activatedRoute.params.subscribe((params => {
-      this.id = +params['id'];
-      this.currency = this.currencyService.get(this.id);
+    this.currency = new Currency(null, null, null, null);
+    this.activatedRouteParamsSubscription = this.activatedRoute.params.subscribe(((params: Params) => {
+      this.currencyService.get(+params['id']).subscribe((currency: Currency) => this.currency = currency);
     }));
   }
 
@@ -38,8 +35,10 @@ export class CurrencyItemComponent implements OnInit, OnDestroy {
   }
 
   public doOnBtDeleteClick() {
-    this.currencyService.delete(this.id);
-    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    this.currencyService.delete(this.currency.id).subscribe(() => {
+      this.currencyService.currenciesChangedSubject.next();
+      this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    });
   }
 
 }

@@ -2,20 +2,17 @@ import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Currency} from '../models/currency.model';
 import {Subject} from 'rxjs/Subject';
 import {Account} from '../models/account.model';
+import {Observable} from 'rxjs/Observable';
+import {Http, Response} from '@angular/http';
 
 @Injectable()
 export class CurrencyService implements OnInit, OnDestroy {
 
-  public currenciesChangedSubject: Subject<Currency[]> = new Subject<Currency[]>();
+  public currenciesChangedSubject: Subject<void> = new Subject<void>();
 
-  private currencies: Currency[] = [
-    new Currency(6, 'BYN', 'Белорусский рубль', 2),
-    new Currency(7, 'USD', 'Доллар США', 0),
-    new Currency(8, 'EUR', 'Евро', 2),
-    new Currency(9, 'RUR', 'Российский рубль', 2)
-  ];
+  private CURRENCIES_URL = 'http://192.168.56.1:8080/income-dev/rest/currencies';
 
-  constructor() {
+  constructor(private http: Http) {
   }
 
   public ngOnInit(): void {
@@ -24,64 +21,29 @@ export class CurrencyService implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
   }
 
-  public getList(): Currency[] {
-    return this.currencies.slice();
+  public getList(): Observable<Currency[]> {
+    return this.http.get(this.CURRENCIES_URL)
+      .map((response: Response) => response.json());
   }
 
-  public get(id: number): Currency {
-    for (const currency of this.currencies) {
-      if (id === currency.id) {
-        return currency;
-      }
-    }
-    return null;
+  public get(id: number): Observable<Currency> {
+    return this.http.get(this.CURRENCIES_URL + '/' + id)
+      .map((response: Response) => response.json());
   }
 
-  public create(currency: Currency): Currency {
-    currency.id = this.getNextId();
-    this.currencies.push(currency);
-    this.currenciesChangedSubject.next(this.currencies);
-    return currency;
+  public create(currency: Currency): Observable<Currency> {
+    return this.http.post(this.CURRENCIES_URL, currency)
+      .map((response: Response) => response.json());
   }
 
-  public update(currency: Currency): void {
-    for (let index = 0; index < this.currencies.length; index++) {
-      if (currency.id === this.currencies[index].id) {
-        this.currencies[index] = currency;
-        this.currenciesChangedSubject.next(this.currencies);
-        return;
-      }
-    }
+  public update(currency: Currency): Observable<Currency> {
+    return this.http.put(this.CURRENCIES_URL, currency)
+      .map((response: Response) => response.json());
   }
 
-  public delete(id: number): void {
-    for (let index = 0; index < this.currencies.length; index++) {
-      if (id === this.currencies[index].id) {
-        this.currencies.splice(index, 1);
-        this.currenciesChangedSubject.next(this.currencies);
-        return;
-      }
-    }
-  }
-
-  private getNextId(): number {
-    let max = 0;
-    this.currencies.forEach((currency: Currency) => {
-      if (max < currency.id) {
-        max = currency.id;
-      }
-    });
-    return max + 1;
-  }
-
-  public fillInfo(account: Account): Account {
-    for (const currency of this.currencies) {
-      if (currency.id === account.currencyId) {
-        account.currencyCode = currency.code;
-        account.currencyTitle = currency.title;
-        return account;
-      }
-    }
+  public delete(id: number): Observable<void> {
+    return this.http.delete(this.CURRENCIES_URL + '/' + id)
+      .map((response: Response) => {});
   }
 
 }
