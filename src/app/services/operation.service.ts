@@ -43,7 +43,14 @@ export class OperationService implements OnInit, OnDestroy {
   }
 
   public create(operation: Operation): Observable<Operation> {
-    return this.http.post(this.OPERATIONS_URL, operation).map((response: Response) => {
+    const body = {
+      accountId: operation.accountId,
+      categoryId: operation.categoryId,
+      day: DateUtil.dateToStr(operation.day),
+      amount: operation.amount,
+      note: operation.note
+    };
+    return this.http.post(this.OPERATIONS_URL, body).map((response: Response) => {
         const result = response.json();
         result.day = DateUtil.strToDate(result.day);
         return result;
@@ -51,7 +58,14 @@ export class OperationService implements OnInit, OnDestroy {
   }
 
   public update(operation: Operation): Observable<Operation> {
-    return this.http.put(this.OPERATIONS_URL, operation).map((response: Response) => {
+    const body = {
+      id: operation.id,
+      categoryId: operation.categoryId,
+      day: DateUtil.dateToStr(operation.day),
+      amount: operation.amount,
+      note: operation.note
+    };
+    return this.http.put(this.OPERATIONS_URL, body).map((response: Response) => {
         const result = response.json();
         result.day = DateUtil.strToDate(result.day);
         return result;
@@ -59,7 +73,7 @@ export class OperationService implements OnInit, OnDestroy {
   }
 
   public delete(id: number): Observable<void> {
-    return this.http.delete(this.OPERATIONS_URL).map((response: Response) => {});
+    return this.http.delete(this.OPERATIONS_URL + '/' + id).map((response: Response) => {});
   }
 
 }

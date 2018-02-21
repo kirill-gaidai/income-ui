@@ -12,6 +12,7 @@
           <th>#</th>
           <th>Наименование счета</th>
           <th>Наименование категории</th>
+          <th>День</th>
           <th>Сумма</th>
           <th>Комментарий</th>
         </tr>
@@ -21,6 +22,7 @@
           <td>{{operation.id}}</td>
           <td>{{operation.accountTitle}}</td>
           <td>{{operation.categoryTitle}}</td>
+          <td>{{operation.day | date:'dd.MM.yyyy'}}</td>
           <td>{{operation.amount}}</td>
           <td>{{operation.note}}</td>
         </tr>

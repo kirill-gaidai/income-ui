@@ -8,6 +8,9 @@ import {DateUtil} from '../utils/date.util';
 import {Summary} from '../models/summary.model';
 import {Category} from '../models/category.model';
 import {SummaryTable} from '../models/summary-table.model';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
+import {Operation} from '../models/operation.model';
 
 @Component({
   selector: 'app-summaries',
@@ -15,6 +18,8 @@ import {SummaryTable} from '../models/summary-table.model';
   styleUrls: ['./summaries.component.css']
 })
 export class SummariesComponent implements OnInit, OnDestroy {
+
+  private summaryChangedSubscription: Subscription;
 
   private summaryParamsForm: FormGroup;
   private accountsFilterForm: FormGroup;
@@ -27,16 +32,13 @@ export class SummariesComponent implements OnInit, OnDestroy {
   private summaryTable: SummaryTable;
 
   constructor(private summaryService: SummaryService,
-              private currencyService: CurrencyService) {
+              private currencyService: CurrencyService,
+              private activatedRoute: ActivatedRoute,
+              private router: Router) {
   }
 
   public ngOnInit(): void {
-    this.currencies = [];
-    this.currencyService.getList().subscribe((currencies: Currency[]) => this.currencies = currencies);
-
-    this.accounts = [];
-    this.categories = [];
-    this.summaryTable = new SummaryTable([], [], [], [], [], [], 0);
+    this.summaryChangedSubscription = this.summaryService.summariesChangedObservable.subscribe(this.doOnBtSearchClick.bind(this));
 
     this.summaryParamsForm = new FormGroup({
       'firstDay': new FormControl('2017-12-01'),
@@ -49,6 +51,21 @@ export class SummariesComponent implements OnInit, OnDestroy {
     this.categoriesFilterForm = new FormGroup({
       'categories': new FormArray([])
     });
+
+    this.currencies = [];
+    this.currencyService.getList().subscribe((currencies: Currency[]) => {
+      this.currencies = currencies;
+      if (this.currencies.length > 0) {
+        this.summaryParamsForm.patchValue({
+          'currencyId': this.currencies[0].id
+        });
+      }
+    });
+
+    this.accounts = [];
+    this.categories = [];
+    this.summaryTable = new SummaryTable([], [], [], [], [], [], 0);
+
   }
 
   public ngOnDestroy(): void {
@@ -83,6 +100,8 @@ export class SummariesComponent implements OnInit, OnDestroy {
       }
 
       this.summaryTable = SummaryService.transform(summary, this.getFilterIds('accounts', true), this.getFilterIds('categories', true));
+
+      this.router.navigate(['summaries']);
     });
   }
 

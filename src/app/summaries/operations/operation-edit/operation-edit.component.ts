@@ -8,6 +8,7 @@ import {Category} from '../../../models/category.model';
 import {Account} from '../../../models/account.model';
 import {Operation} from '../../../models/operation.model';
 import {DateUtil} from '../../../utils/date.util';
+import {SummaryService} from '../../../services/summary.service';
 
 @Component({
   selector: 'app-operation-edit',
@@ -24,6 +25,7 @@ export class OperationEditComponent implements OnInit, OnDestroy {
   constructor(private operationService: OperationService,
               private categoryService: CategoryService,
               private accountService: AccountService,
+              private summaryService: SummaryService,
               private activatedRoute: ActivatedRoute,
               private router: Router) {
   }
@@ -40,6 +42,8 @@ export class OperationEditComponent implements OnInit, OnDestroy {
       this.categoryService.getList().subscribe((categories: Category[]) => this.categories = categories);
       this.accountService.getList().subscribe((accounts: Account[]) => this.accounts = accounts);
       this.operationService.get(this.id).subscribe((operation: Operation) => this.initForm(operation));
+      // Запрещаем изменение счета существующей операции
+      this.operationEditForm.get('accountId').disable();
     } else {
       // При открытии формы новой операции параметрами передаем:
       // - id счетов, для которых может быть сохранена операция;
@@ -63,12 +67,14 @@ export class OperationEditComponent implements OnInit, OnDestroy {
             this.operationEditForm.patchValue({
               'categoryId': this.categories[0].id
             });
+            this.operationEditForm.get('categoryId').disable();
           }
           // Если один счет, то заполняем и отключаем поле выбора счета
           if (this.accounts.length === 1) {
             this.operationEditForm.patchValue({
               'accountId': this.accounts[0].id
             });
+            this.operationEditForm.get('accountId').disable();
           }
         });
       });
@@ -100,6 +106,42 @@ export class OperationEditComponent implements OnInit, OnDestroy {
       }, []);
     }
     return [+idsParam];
+  }
+
+  public doOnBtSaveClick(): void {
+    if (this.id != null) {
+      this.operationService.update(new Operation(
+        +this.operationEditForm.get('id').value,
+        +this.operationEditForm.get('accountId').value,
+        null,
+        +this.operationEditForm.get('categoryId').value,
+        null,
+        DateUtil.strToDate(this.operationEditForm.get('day').value),
+        +this.operationEditForm.get('amount').value,
+        this.operationEditForm.get('note').value
+      )).subscribe((operation: Operation) => {
+        this.summaryService.summariesChangedObservable.next();
+        this.router.navigate(['/summaries']);
+      });
+    } else {
+      this.operationService.create(new Operation(
+        null,
+        +this.operationEditForm.get('accountId').value,
+        null,
+        +this.operationEditForm.get('categoryId').value,
+        null,
+        DateUtil.strToDate(this.operationEditForm.get('day').value),
+        +this.operationEditForm.get('amount').value,
+        this.operationEditForm.get('note').value
+      )).subscribe((operation: Operation) => {
+        this.summaryService.summariesChangedObservable.next();
+        this.router.navigate(['/summaries']);
+      });
+    }
+  }
+
+  public doOnBtCancelClick(): void {
+    this.router.navigate(['/summaries']);
   }
 
 }

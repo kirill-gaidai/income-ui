@@ -1,5 +1,5 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {Headers, Http, Response, URLSearchParams} from '@angular/http';
+import {Http, Response, URLSearchParams} from '@angular/http';
 import {DateUtil} from '../utils/date.util';
 import 'rxjs/Rx';
 import {Summary} from '../models/summary.model';
@@ -10,11 +10,12 @@ import {Balance} from '../models/balance.model';
 import {Operation} from '../models/operation.model';
 import {Account} from '../models/account.model';
 import {Category} from '../models/category.model';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class SummaryService implements OnInit, OnDestroy {
 
-  public summariesChangedObservable: Observable<void> = new Observable<void>();
+  public summariesChangedObservable: Subject<void> = new Subject<void>();
 
   /**
    * Преобразует JSON, который вернул сервер в отображаемую таблицу

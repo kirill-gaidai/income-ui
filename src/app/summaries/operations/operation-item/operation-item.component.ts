@@ -40,7 +40,10 @@ export class OperationItemComponent implements OnInit, OnDestroy {
   }
 
   public doOnBtDeleteClick(): void {
-
+    this.operationService.delete(this.operation.id).subscribe(() => {
+      this.summaryService.summariesChangedObservable.next();
+      this.router.navigate(['/summaries']);
+    });
   }
 
 }
