@@ -24,9 +24,9 @@ export class OperationItemComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.operation = new Operation(null, null, null, null, null, null, null, null);
-    this.activatedRouteParamsSubscription = this.operationService.get(+this.activatedRoute.snapshot.params['id'])
+    this.operationService.get(+this.activatedRoute.snapshot.params['id'])
       .subscribe((operation: Operation) => this.operation = operation);
-    this.activatedRoute.params.subscribe((params: Params) => {
+    this.activatedRouteParamsSubscription = this.activatedRoute.params.subscribe((params: Params) => {
       this.operationService.get(+params['id']).subscribe((operation: Operation) => this.operation = operation);
     });
   }

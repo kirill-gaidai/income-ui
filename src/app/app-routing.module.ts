@@ -11,10 +11,12 @@ import {AccountsComponent} from './directories/accounts/accounts.component';
 import {AccountEditComponent} from './directories/accounts/account-edit/account-edit.component';
 import {AccountItemComponent} from './directories/accounts/account-item/account-item.component';
 import {SummariesComponent} from './summaries/summaries.component';
-import {BalanceComponent} from './summaries/balance/balance.component';
 import {OperationsComponent} from './summaries/operations/operations.component';
 import {OperationEditComponent} from './summaries/operations/operation-edit/operation-edit.component';
 import {OperationItemComponent} from './summaries/operations/operation-item/operation-item.component';
+import {BalancesComponent} from './summaries/balances/balances.component';
+import {BalanceItemComponent} from './summaries/balances/balance-item/balance-item.component';
+import {BalanceEditComponent} from './summaries/balances/balance-edit/balance-edit.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
@@ -45,7 +47,12 @@ const appRoutes: Routes = [
   },
   {
     path: 'summaries', component: SummariesComponent, children: [
-      {path: 'balance', component: BalanceComponent},
+      {
+        path: 'balance', component: BalancesComponent, children: [
+          {path: 'view', component: BalanceItemComponent},
+          {path: 'edit', component: BalanceEditComponent}
+        ]
+      },
       {
         path: 'operations', component: OperationsComponent, children: [
           {path: 'new', component: OperationEditComponent},

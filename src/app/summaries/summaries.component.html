@@ -62,7 +62,7 @@
         <td>{{row.difference}}</td>
         <td
           *ngFor="let accountAmount of row.accountAmounts; let i = index"
-          routerLink="balance"
+          routerLink="balance/view"
           [queryParams]="{
             day: row.day | date:'yyyy-MM-dd',
             account_id: summaryTable.accountIds[i]

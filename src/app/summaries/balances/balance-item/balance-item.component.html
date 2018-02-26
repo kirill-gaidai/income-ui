@@ -1,0 +1,25 @@
+<table class="table">
+  <tr>
+    <th>Код счета</th>
+    <td>{{balance.accountId}}</td>
+  </tr>
+  <tr>
+    <th>Наименование счета</th>
+    <td>{{balance.accountTitle}}</td>
+  </tr>
+  <tr>
+    <th>День</th>
+    <td>{{balance.day | date:'dd.MM.yyyy'}}</td>
+  </tr>
+  <tr>
+    <th>Сумма</th>
+    <td>{{balance.amount}}</td>
+  </tr>
+  <tr>
+    <th>Зафиксирован</th>
+    <td>{{balance.manual ? 'да' : 'нет'}}</td>
+  </tr>
+</table>
+
+<button class="btn btn-primary" type="button" (click)="doOnBtEditClick()">Редактировать</button>
+<button class="btn btn-danger" type="button" (click)="doOnBtDeleteClick()">Удалить</button>

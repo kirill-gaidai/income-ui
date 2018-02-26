@@ -1,23 +1,23 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {BalanceService} from '../../services/balance.service';
-import {SummaryService} from '../../services/summary.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {DateUtil} from '../../utils/date.util';
-import {Subscription} from 'rxjs/Subscription';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Balance} from '../../models/balance.model';
+import {DateUtil} from '../../../utils/date.util';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {SummaryService} from '../../../services/summary.service';
+import {Subscription} from 'rxjs/Subscription';
+import {Balance} from '../../../models/balance.model';
+import {BalanceService} from '../../../services/balance.service';
 
 @Component({
-  selector: 'app-balance',
-  templateUrl: './balance.component.html',
-  styleUrls: ['./balance.component.css']
+  selector: 'app-balance-edit',
+  templateUrl: './balance-edit.component.html',
+  styleUrls: ['./balance-edit.component.css']
 })
-export class BalanceComponent implements OnInit, OnDestroy {
+export class BalanceEditComponent implements OnInit, OnDestroy {
 
   private day: Date;
   private accountId: number;
 
-  private queryParamsSubscription: Subscription;
+  private activatedRouteQueryParamsSubscription: Subscription;
 
   private balanceEditForm: FormGroup;
 
@@ -39,7 +39,7 @@ export class BalanceComponent implements OnInit, OnDestroy {
     this.accountId = +this.activatedRoute.snapshot.queryParams['account_id'];
     this.initForm();
 
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe((params: Params) => {
+    this.activatedRouteQueryParamsSubscription = this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.day = DateUtil.strToDate(params['day']);
       this.accountId = +params['account_id'];
       this.initForm();
@@ -58,11 +58,24 @@ export class BalanceComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.queryParamsSubscription.unsubscribe();
+    this.activatedRouteQueryParamsSubscription.unsubscribe();
   }
 
   public doOnBtSaveClick(): void {
+      this.balanceService.save(new Balance(
+        this.accountId,
+        null,
+        this.day,
+        +this.balanceEditForm.get('amount').value,
+        this.balanceEditForm.get('manual').value
+      )).subscribe((balance: Balance) => {
+        this.summaryService.summariesChangedObservable.next();
+        this.router.navigate(['/summaries']);
+      });
+  }
 
+  public doOnBtCancelClick(): void {
+    this.router.navigate(['/summaries']);
   }
 
 }
