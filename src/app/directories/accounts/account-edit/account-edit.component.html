@@ -16,7 +16,7 @@
     </select>
     <span
       *ngIf="!accountEditForm.get('currencyId').valid && accountEditForm.get('currencyId').touched"
-      >Обязательное</span>
+      class="help-block">Обязательное</span>
   </div>
 
   <div class="form-group">
@@ -35,7 +35,7 @@
       class="help-block">От 1 до 250 символов</span>
   </div>
 
-  <button class="btn btn-primary" type="submit">Сохранить</button>
-  <button class="btn btn-warning" type="button">Отменить</button>
+  <button class="btn btn-primary" type="submit" [disabled]="!accountEditForm.valid">Сохранить</button>
+  <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">Отменить</button>
 
 </form>

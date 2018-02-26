@@ -29,7 +29,7 @@
       class="help-block">В интервале от 0 до 4</span>
   </div>
 
-  <button class="btn btn-primary" type="submit">Сохранить</button>
-  <button class="btn btn-warning" type="button">Отменить</button>
+  <button class="btn btn-primary" type="submit" [disabled]="!currencyEditForm.valid">Сохранить</button>
+  <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">Отменить</button>
 
 </form>

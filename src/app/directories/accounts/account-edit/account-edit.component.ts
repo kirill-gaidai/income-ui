@@ -73,4 +73,8 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  public doOnBtCancelClick(): void {
+    this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+  }
+
 }

@@ -10,7 +10,7 @@
     <input id="sort" type="text" class="form-control" formControlName="sort">
     <span
       *ngIf="!categoryEditForm.get('sort').valid && categoryEditForm.get('sort').touched"
-      class="help-block">От 1 до 250 символов</span>
+      class="help-block">От 1 до 10 символов</span>
   </div>
 
   <div class="form-group">
@@ -21,7 +21,7 @@
       class="help-block">От 1 до 250 символов</span>
   </div>
 
-  <button class="btn btn-primary" type="submit">Сохранить</button>
-  <button class="btn btn-warning" type="button">Отменить</button>
+  <button class="btn btn-primary" type="submit" [disabled]="!categoryEditForm.valid">Сохранить</button>
+  <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">Отменить</button>
 
 </form>
