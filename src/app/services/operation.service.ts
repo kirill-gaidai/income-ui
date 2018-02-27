@@ -7,7 +7,8 @@ import {DateUtil} from '../utils/date.util';
 @Injectable()
 export class OperationService implements OnInit, OnDestroy {
 
-  private OPERATIONS_URL = 'http://192.168.56.1:8080/income-dev/rest/operations';
+  // private OPERATIONS_URL = 'http://192.168.56.1:8080/income-dev/rest/operations';
+  private OPERATIONS_URL = '/rest/operations';
 
   constructor(private http: Http) {
   }

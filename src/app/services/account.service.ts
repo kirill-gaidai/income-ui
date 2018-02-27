@@ -9,7 +9,8 @@ export class AccountService implements OnInit, OnDestroy {
 
   public accountsChangedSubject: Subject<void> = new Subject<void>();
 
-  private ACCOUNTS_URL = 'http://192.168.56.1:8080/income-dev/rest/accounts';
+  // private ACCOUNTS_URL = 'http://192.168.56.1:8080/income-dev/rest/accounts';
+  private ACCOUNTS_URL = '/rest/accounts';
 
   constructor(private http: Http) {
   }

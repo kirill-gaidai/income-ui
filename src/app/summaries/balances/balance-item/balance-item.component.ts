@@ -13,10 +13,10 @@ import {DateUtil} from '../../../utils/date.util';
 })
 export class BalanceItemComponent implements OnInit, OnDestroy {
 
-  private numberFormat: string;
   private activatedRouteQueryParamsSubscription: Subscription;
 
   public balance: Balance;
+  public numberFormat: string;
 
   constructor(private balanceService: BalanceService,
               private summaryService: SummaryService,

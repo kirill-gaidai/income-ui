@@ -12,7 +12,8 @@ export class SummaryService implements OnInit, OnDestroy {
   public summariesChangedObservable: Subject<void> = new Subject<void>();
   public accuracy = 2;
 
-  private SUMMARIES_URL = 'http://192.168.56.1:8080/income-dev/rest/summaries';
+  // private SUMMARIES_URL = 'http://192.168.56.1:8080/income-dev/rest/summaries';
+  private SUMMARIES_URL = '/rest/summaries';
 
   constructor(private http: Http) {
   }

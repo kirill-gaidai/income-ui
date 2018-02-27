@@ -9,7 +9,8 @@ export class CurrencyService implements OnInit, OnDestroy {
 
   public currenciesChangedSubject: Subject<void> = new Subject<void>();
 
-  private CURRENCIES_URL = 'http://192.168.56.1:8080/income-dev/rest/currencies';
+  // private CURRENCIES_URL = 'http://192.168.56.1:8080/income-dev/rest/currencies';
+  private CURRENCIES_URL = '/rest/currencies';
 
   constructor(private http: Http) {
   }

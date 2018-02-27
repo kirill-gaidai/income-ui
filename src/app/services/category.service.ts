@@ -9,7 +9,8 @@ export class CategoryService implements OnInit, OnDestroy {
 
   public categoriesChangedSubject: Subject<void> = new Subject<void>();
 
-  private CATEGORIES_URL = 'http://192.168.56.1:8080/income-dev/rest/categories';
+  // private CATEGORIES_URL = 'http://192.168.56.1:8080/income-dev/rest/categories';
+  private CATEGORIES_URL = '/rest/categories';
 
   constructor(private http: Http) {
   }

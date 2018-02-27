@@ -12,10 +12,10 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class OperationItemComponent implements OnInit, OnDestroy {
 
-  private numberFormat: string;
   private activatedRouteParamsSubscription: Subscription;
 
   public operation: Operation;
+  public numberFormat: string;
 
   constructor(private operationService: OperationService,
               private summaryService: SummaryService,

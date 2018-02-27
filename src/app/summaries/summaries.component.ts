@@ -24,13 +24,13 @@ export class SummariesComponent implements OnInit, OnDestroy {
   private summaryChangedSubscription: Subscription;
   private accounts: Account[];
   private categories: Category[];
-  private numberFormat: string;
 
   public summaryParamsForm: FormGroup;
   public accountsFilterForm: FormGroup;
   public categoriesFilterForm: FormGroup;
   public currencies: Currency[];
   public summaryTable: SummaryTable;
+  public numberFormat: string;
 
   constructor(private summaryService: SummaryService,
               private currencyService: CurrencyService,

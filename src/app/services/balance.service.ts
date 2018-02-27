@@ -7,7 +7,8 @@ import {DateUtil} from '../utils/date.util';
 @Injectable()
 export class BalanceService implements OnInit, OnDestroy {
 
-  private BALANCES_URL = 'http://192.168.56.1:8080/income-dev/rest/balances';
+  // private BALANCES_URL = 'http://192.168.56.1:8080/income-dev/rest/balances';
+  private BALANCES_URL = '/rest/balances';
 
   constructor(private http: Http) {
   }

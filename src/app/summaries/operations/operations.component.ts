@@ -17,10 +17,10 @@ export class OperationsComponent implements OnInit, OnDestroy {
   private day: Date;
   private accountIds: number[];
   private categoryIds: number[];
-  private numberFormat: string;
   private queryParamsSubscription: Subscription;
 
   public operations: Operation[];
+  public numberFormat: string;
 
   constructor(private operationService: OperationService,
               private summaryService: SummaryService,
