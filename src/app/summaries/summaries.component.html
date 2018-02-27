@@ -30,7 +30,7 @@
   <div class="row">
     <form [formGroup]="accountsFilterForm" class="form-inline">
       <div formArrayName="accounts" class="checkbox">
-        <label *ngFor="let accountControl of accountsFilterForm.get('accounts').controls; let i = index">
+        <label *ngFor="let accountControl of accountsFilterForm.get('accounts')['controls']; let i = index">
           <input type="checkbox" [formControlName]="i"> {{accounts[i].title}}
         </label>
       </div>
@@ -40,7 +40,7 @@
   <div class="row">
     <form [formGroup]="categoriesFilterForm" class="form-inline">
       <div formArrayName="categories" class="checkbox">
-        <label *ngFor="let categoryControl of categoriesFilterForm.get('categories').controls; let i = index">
+        <label *ngFor="let categoryControl of categoriesFilterForm.get('categories')['controls']; let i = index">
           <input type="checkbox" [formControlName]="i"> {{categories[i].title}}
         </label>
       </div>
@@ -49,7 +49,7 @@
 
   <div class="row">
     <table class="table table-bordered">
-      <tr>
+      <tr class="bg-info">
         <th>День</th>
         <th>Разность</th>
         <th *ngFor="let accountTitle of summaryTable.accountTitles">{{accountTitle}}</th>
@@ -58,18 +58,20 @@
         <th>Сумма</th>
       </tr>
       <tr *ngFor="let row of summaryTable.rows">
-        <td>{{row.day | date:'dd.MM.yyyy' }}</td>
-        <td>{{row.difference}}</td>
+        <td class="bg-info">{{row.day | date:'dd.MM.yyyy' }}</td>
+        <td class="bg-info" style="text-align: right">{{row.difference | number:numberFormat}}</td>
         <td
+          style="text-align: right"
           *ngFor="let accountAmount of row.accountAmounts; let i = index"
           routerLink="balance/view"
           [queryParams]="{
             day: row.day | date:'yyyy-MM-dd',
             account_id: summaryTable.accountIds[i]
           }"
-        >{{accountAmount}}</td>
-        <td>{{row.accountAmountsSum}}</td>
+        >{{accountAmount | number:numberFormat}}</td>
+        <td class="bg-info" style="text-align: right">{{row.accountAmountsSum | number:numberFormat}}</td>
         <td
+          style="text-align: right"
           *ngFor="let categoryAmount of row.categoryAmounts; let i = index"
           routerLink="operations"
           [queryParams]="{
@@ -77,23 +79,27 @@
             account_id: summaryTable.accountIds,
             category_id: summaryTable.categoryIds[i]
           }"
-        >{{categoryAmount}}</td>
+        >{{categoryAmount | number:numberFormat}}</td>
         <td
+          class="bg-info"
+          style="text-align: right"
           routerLink="operations"
           [queryParams]="{
             day: row.day | date:'yyyy-MM-dd',
             account_id: summaryTable.accountIds,
             category_id: summaryTable.categoryIds
           }"
-        >{{row.categoryAmountsSum}}</td>
+        >{{row.categoryAmountsSum | number:numberFormat}}</td>
       </tr>
-      <tr>
+      <tr class="bg-info">
         <td></td>
         <td></td>
         <th *ngFor="let accountTitle of summaryTable.accountTitles"></th>
         <th></th>
-        <th *ngFor="let categoryAmount of summaryTable.categoryAmounts">{{categoryAmount}}</th>
-        <th>{{summaryTable.categoryAmountsSum}}</th>
+        <th
+          style="text-align: right"
+          *ngFor="let categoryAmount of summaryTable.categoryAmounts">{{categoryAmount | number:numberFormat}}</th>
+        <th style="text-align: right">{{summaryTable.categoryAmountsSum | number:numberFormat}}</th>
       </tr>
     </table>
   </div>

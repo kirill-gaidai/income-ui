@@ -11,8 +11,9 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class CategoryItemComponent implements OnInit, OnDestroy {
 
-  private category: Category;
   private activatedRouteParamsSubscription: Subscription;
+
+  public category: Category;
 
   constructor(private categoryService: CategoryService,
               private activatedRoute: ActivatedRoute,

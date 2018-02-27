@@ -12,7 +12,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class CategoriesComponent implements OnInit, OnDestroy {
 
   private categoriesChangedSubscription: Subscription;
-  private categories: Category[];
+
+  public categories: Category[];
 
   constructor(private categoryService: CategoryService,
               private activatedRoute: ActivatedRoute,

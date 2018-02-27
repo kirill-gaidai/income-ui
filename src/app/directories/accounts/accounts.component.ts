@@ -12,7 +12,8 @@ import {Subscription} from 'rxjs/Subscription';
 export class AccountsComponent implements OnInit, OnDestroy {
 
   private accountsChangedSubscription: Subscription;
-  private accounts: Account[];
+
+  public accounts: Account[];
 
   constructor(private accountService: AccountService,
               private activatedRoute: ActivatedRoute,

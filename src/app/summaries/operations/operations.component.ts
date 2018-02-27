@@ -17,10 +17,10 @@ export class OperationsComponent implements OnInit, OnDestroy {
   private day: Date;
   private accountIds: number[];
   private categoryIds: number[];
-
-  private operations: Operation[];
-
+  private numberFormat: string;
   private queryParamsSubscription: Subscription;
+
+  public operations: Operation[];
 
   constructor(private operationService: OperationService,
               private summaryService: SummaryService,
@@ -29,6 +29,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.numberFormat = '1.' + this.summaryService.accuracy + '-' + this.summaryService.accuracy;
     this.operations = [];
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe((params: Params) => this.init(params));
   }

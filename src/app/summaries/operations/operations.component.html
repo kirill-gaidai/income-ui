@@ -23,7 +23,7 @@
           <td>{{operation.accountTitle}}</td>
           <td>{{operation.categoryTitle}}</td>
           <td>{{operation.day | date:'dd.MM.yyyy'}}</td>
-          <td>{{operation.amount}}</td>
+          <td>{{operation.amount | number:numberFormat}}</td>
           <td>{{operation.note}}</td>
         </tr>
       </table>

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {DateUtil} from '../../../utils/date.util';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SummaryService} from '../../../services/summary.service';
@@ -16,10 +16,11 @@ export class BalanceEditComponent implements OnInit, OnDestroy {
 
   private day: Date;
   private accountId: number;
-
+  private accuracy: number;
+  private pattern: string;
   private activatedRouteQueryParamsSubscription: Subscription;
 
-  private balanceEditForm: FormGroup;
+  public balanceEditForm: FormGroup;
 
   constructor(private balanceService: BalanceService,
               private summaryService: SummaryService,
@@ -28,11 +29,18 @@ export class BalanceEditComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.accuracy = this.summaryService.accuracy;
+    this.pattern = '^[-+]?([0-9]{0,10}\\.[0-9]{0,' + this.accuracy + '}|[0-9]{0,10})$';
+
     this.balanceEditForm = new FormGroup({
-      'accountTitle': new FormControl(null),
-      'day': new FormControl(null),
-      'amount': new FormControl(null),
-      'manual': new FormControl(false)
+      'accountTitle': new FormControl(null,
+        []),
+      'day': new FormControl(null,
+        []),
+      'amount': new FormControl(null,
+        [Validators.required, Validators.pattern(this.pattern)]),
+      'manual': new FormControl(false,
+        [])
     });
 
     this.day = DateUtil.strToDate(this.activatedRoute.snapshot.queryParams['day']);
@@ -49,10 +57,14 @@ export class BalanceEditComponent implements OnInit, OnDestroy {
   private initForm(): void {
     this.balanceService.get(this.day, this.accountId).subscribe((balance: Balance) => {
       this.balanceEditForm = new FormGroup({
-        'accountTitle': new FormControl(balance.accountTitle),
-        'day': new FormControl(DateUtil.dateToStr(balance.day)),
-        'amount': new FormControl(balance.amount),
-        'manual': new FormControl(balance.manual)
+        'accountTitle': new FormControl(balance.accountTitle,
+          []),
+        'day': new FormControl(DateUtil.dateToStr(balance.day),
+          []),
+        'amount': new FormControl(balance.amount,
+          [Validators.required, Validators.pattern(this.pattern)]),
+        'manual': new FormControl(balance.manual,
+          [])
       });
     });
   }

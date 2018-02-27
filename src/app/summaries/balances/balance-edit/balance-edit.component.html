@@ -9,12 +9,17 @@
   </div>
   <div class="form-group">
     <label for="amount">Остаток</label>
-    <input id="amount" type="text" class="form-control" formControlName="amount">
+    <input id="amount" type="number" class="form-control" formControlName="amount">
+    <span
+      class="help-block"
+      *ngIf="!balanceEditForm.get('amount').valid && balanceEditForm.get('amount').touched">
+      до 10 знаков до запятой, до {{accuracy}} - после
+    </span>
   </div>
   <div class="checkbox">
     <label><input type="checkbox" formControlName="manual"> Зафиксировать</label>
   </div>
 
-  <button type="submit" class="btn btn-primary">Сохранить</button>
+  <button type="submit" class="btn btn-primary" [disabled]="!balanceEditForm.valid">Сохранить</button>
   <button type="button" class="btn btn-warning" (click)="doOnBtCancelClick()">Отменить</button>
 </form>

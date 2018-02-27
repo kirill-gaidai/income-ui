@@ -12,7 +12,8 @@ import {Currency} from '../../../models/currency.model';
 export class CurrencyEditComponent implements OnInit, OnDestroy {
 
   private id: number;
-  private currencyEditForm: FormGroup;
+
+  public currencyEditForm: FormGroup;
 
   constructor(private currencyService: CurrencyService,
               private activatedRoute: ActivatedRoute,

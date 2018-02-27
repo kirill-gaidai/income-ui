@@ -1,7 +1,6 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Currency} from '../models/currency.model';
 import {Subject} from 'rxjs/Subject';
-import {Account} from '../models/account.model';
 import {Observable} from 'rxjs/Observable';
 import {Http, Response} from '@angular/http';
 

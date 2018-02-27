@@ -3,7 +3,7 @@ import {OperationService} from '../../../services/operation.service';
 import {CategoryService} from '../../../services/category.service';
 import {AccountService} from '../../../services/account.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Category} from '../../../models/category.model';
 import {Account} from '../../../models/account.model';
 import {Operation} from '../../../models/operation.model';
@@ -18,9 +18,12 @@ import {SummaryService} from '../../../services/summary.service';
 export class OperationEditComponent implements OnInit, OnDestroy {
 
   private id: number;
-  private operationEditForm: FormGroup;
-  private categories: Category[];
-  private accounts: Account[];
+  private accuracy: number;
+  private pattern: string;
+
+  public operationEditForm: FormGroup;
+  public categories: Category[];
+  public accounts: Account[];
 
   constructor(private operationService: OperationService,
               private categoryService: CategoryService,
@@ -31,6 +34,9 @@ export class OperationEditComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.accuracy = this.summaryService.accuracy;
+    this.pattern = '^[-+]?([0-9]{0,10}\\.[0-9]{0,' + this.accuracy + '}|[0-9]{0,10})$';
+
     this.id = this.activatedRoute.snapshot.params['id'] ? +this.activatedRoute.snapshot.params['id'] : null;
     this.categories = [];
     this.accounts = [];
@@ -83,12 +89,18 @@ export class OperationEditComponent implements OnInit, OnDestroy {
 
   private initForm(operation: Operation): void {
     this.operationEditForm = new FormGroup({
-      'id': new FormControl(!operation ? null : operation.id),
-      'accountId': new FormControl(!operation ? null : operation.accountId),
-      'categoryId': new FormControl(!operation ? null : operation.categoryId),
-      'day': new FormControl(!operation ? null : DateUtil.dateToStr(operation.day)),
-      'amount': new FormControl(!operation ? null : operation.amount),
-      'note': new FormControl(!operation ? null : operation.note)
+      'id': new FormControl(!operation ? null : operation.id,
+        []),
+      'accountId': new FormControl(!operation ? null : operation.accountId,
+        [Validators.required]),
+      'categoryId': new FormControl(!operation ? null : operation.categoryId,
+        [Validators.required]),
+      'day': new FormControl(!operation ? null : DateUtil.dateToStr(operation.day),
+        [Validators.required]),
+      'amount': new FormControl(!operation ? null : operation.amount,
+        [Validators.required, Validators.pattern(this.pattern)]),
+      'note': new FormControl(!operation ? '' : operation.note,
+        [])
     });
   }
 

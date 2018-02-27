@@ -11,8 +11,9 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class CurrencyItemComponent implements OnInit, OnDestroy {
 
-  private currency: Currency;
   private activatedRouteParamsSubscription: Subscription;
+
+  public currency: Currency;
 
   constructor(private currencyService: CurrencyService,
               private activatedRoute: ActivatedRoute,

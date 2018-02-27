@@ -12,7 +12,8 @@ import {Category} from '../../../models/category.model';
 export class CategoryEditComponent implements OnInit, OnDestroy {
 
   private id: number;
-  private categoryEditForm: FormGroup;
+
+  public categoryEditForm: FormGroup;
 
   constructor(private categoryService: CategoryService,
               private activatedRoute: ActivatedRoute,

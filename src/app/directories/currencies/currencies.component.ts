@@ -12,7 +12,8 @@ import {Subscription} from 'rxjs/Subscription';
 export class CurrenciesComponent implements OnInit, OnDestroy {
 
   private currenciesChangedSubscription: Subscription;
-  private currencies: Currency[];
+
+  public currencies: Currency[];
 
   constructor(private currencyService: CurrencyService,
               private activatedRoute: ActivatedRoute,

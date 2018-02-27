@@ -14,8 +14,9 @@ import {CurrencyService} from '../../../services/currency.service';
 export class AccountEditComponent implements OnInit, OnDestroy {
 
   private id: number;
-  private accountEditForm: FormGroup;
-  private currencies: Currency[];
+
+  public accountEditForm: FormGroup;
+  public currencies: Currency[];
 
   constructor(private accountService: AccountService,
               private currencyService: CurrencyService,

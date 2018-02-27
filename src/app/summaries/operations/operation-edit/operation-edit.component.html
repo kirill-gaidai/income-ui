@@ -37,7 +37,9 @@
     <input id="amount" type="number" class="form-control" formControlName="amount">
     <span
       *ngIf="!operationEditForm.get('amount').valid && operationEditForm.get('amount').touched"
-      class="help-block">Обязательное</span>
+      class="help-block">
+      до 10 знаков до запятой, до {{accuracy}} - после
+    </span>
   </div>
 
   <div class="form-group">
@@ -45,10 +47,10 @@
     <textarea id="note" class="form-control" formControlName="note"></textarea>
     <span
       *ngIf="!operationEditForm.get('note').valid && operationEditForm.get('note').touched"
-      class="help-block">От 1 до 250 символов</span>
+      class="help-block">До 250 символов</span>
   </div>
 
-  <button class="btn btn-primary" type="submit">Сохранить</button>
+  <button class="btn btn-primary" type="submit" [disabled]="!operationEditForm.valid">Сохранить</button>
   <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">Отменить</button>
 
 </form>

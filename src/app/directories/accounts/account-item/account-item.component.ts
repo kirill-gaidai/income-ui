@@ -11,8 +11,9 @@ import {Account} from '../../../models/account.model';
 })
 export class AccountItemComponent implements OnInit, OnDestroy {
 
-  private account: Account;
   private activatedRouteParamsSubscription: Subscription;
+
+  public account: Account;
 
   constructor(private accountService: AccountService,
               private activatedRoute: ActivatedRoute,

@@ -12,9 +12,10 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class OperationItemComponent implements OnInit, OnDestroy {
 
+  private numberFormat: string;
   private activatedRouteParamsSubscription: Subscription;
 
-  private operation: Operation;
+  public operation: Operation;
 
   constructor(private operationService: OperationService,
               private summaryService: SummaryService,
@@ -23,6 +24,7 @@ export class OperationItemComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.numberFormat = '1.' + this.summaryService.accuracy + '-' + this.summaryService.accuracy;
     this.operation = new Operation(null, null, null, null, null, null, null, null);
     this.operationService.get(+this.activatedRoute.snapshot.params['id'])
       .subscribe((operation: Operation) => this.operation = operation);

@@ -13,9 +13,10 @@ import {DateUtil} from '../../../utils/date.util';
 })
 export class BalanceItemComponent implements OnInit, OnDestroy {
 
+  private numberFormat: string;
   private activatedRouteQueryParamsSubscription: Subscription;
 
-  private balance: Balance;
+  public balance: Balance;
 
   constructor(private balanceService: BalanceService,
               private summaryService: SummaryService,
@@ -25,6 +26,7 @@ export class BalanceItemComponent implements OnInit, OnDestroy {
 
 
   public ngOnInit(): void {
+    this.numberFormat = '1.' + this.summaryService.accuracy + '-' + this.summaryService.accuracy;
     this.balance = new Balance(null, null, null, null, null);
     this.balanceService.get(
       DateUtil.strToDate(this.activatedRoute.snapshot.queryParams['day']),
