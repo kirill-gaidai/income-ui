@@ -79,27 +79,45 @@ export class SummariesComponent implements OnInit, OnDestroy {
     this.summaryService.get(currencyId, firstDay, lastDay).subscribe((summary: Summary) => {
       this.summaryService.accuracy = summary.currency.accuracy;
       this.numberFormat = '1.' + summary.currency.accuracy + '-' + summary.currency.accuracy;
+
+      // Запоминаем, с каких счетов были сняты отметки
       const uncheckedAccountIds: Set<number> = new Set<number>(this.getFilterIds('accounts', false));
+      // Запоминаем, с каких категорий были сняты отметки
       const uncheckedCategoryIds: Set<number> = new Set<number>(this.getFilterIds('categories', false));
 
+      // Категории, которых нет в операциях и которые не отображены сейчас, не должны быть отмечены
+      const missingCategoryIds: Set<number> = new Set<number>();
+      // Заполняем сначала всеми категориями
+      summary.categories.forEach((category: Category) => missingCategoryIds.add(category.id));
+      // Удаляем те, которые отображены
+      this.categories.forEach((category: Category) => missingCategoryIds.delete(category.id));
+      // Удаляем те, которые есть в операциях
+      summary.operations.forEach((operation: Operation) => missingCategoryIds.delete(operation.categoryId));
+
+      // Очищаем фильтр счетов
       const accountsFilterFormArray: FormArray = <FormArray>this.accountsFilterForm.get('accounts');
       while (accountsFilterFormArray.length !== 0) {
         accountsFilterFormArray.removeAt(0);
       }
 
+      // Очищаем фильтр категорий
       const categoriesFilterFormArray: FormArray = <FormArray>this.categoriesFilterForm.get('categories');
       while (categoriesFilterFormArray.length !== 0) {
         categoriesFilterFormArray.removeAt(0);
       }
 
+      // Заполняем фильтр счетов заново
       this.accounts = summary.accounts;
       for (const account of this.accounts) {
+        // Попутно снимаем отметку, если ее там не было
         accountsFilterFormArray.push(new FormControl(!uncheckedAccountIds.has(account.id)));
       }
 
+      // Заполняем фильтр категорий заново
       this.categories = summary.categories;
       for (const category of this.categories) {
-        categoriesFilterFormArray.push(new FormControl(!uncheckedCategoryIds.has(category.id)));
+        // Попутно снимаем отметку, если ее там не было или категория новая и отсутствует в списке операций
+        categoriesFilterFormArray.push(new FormControl(!uncheckedCategoryIds.has(category.id) && !missingCategoryIds.has(category.id)));
       }
 
       this.summaryTable = this.transform(summary, this.getFilterIds('accounts', true), this.getFilterIds('categories', true));
@@ -177,41 +195,31 @@ export class SummariesComponent implements OnInit, OnDestroy {
     let difference: number = -initialAccountAmounts.reduce((summ: number, value: number) => summ + value, 0);
 
     const accountAmounts: number[] = initialAccountAmounts.slice();
-    const balances: Balance[] = (new Array(checkedAccountIds.length));
     checkedAccountIds.forEach((accountId, index) => {
       if (balanceDayMap.has(accountId)) {
-        const balance: Balance = balanceDayMap.get(accountId);
-        accountAmounts[index] = balance.amount;
-        balances[index] = balance;
-      } else {
-        balances[index] = new Balance(accountId, '', day, accountAmounts[index], false);
+        accountAmounts[index] = balanceDayMap.get(accountId).amount;
       }
     });
     const accountAmountsSum: number = accountAmounts.reduce((summ: number, value: number) => summ + value, 0);
     difference += accountAmountsSum;
 
     const categoryAmounts: number[] = (new Array(checkedCategoryIds.length)).fill(0);
-    const operations: Operation[][] = (new Array(checkedCategoryIds.length)).fill(null);
     checkedCategoryIds.forEach((categoryId, index) => {
       if (operationDayMap.has(categoryId)) {
-        const operationList: Operation[] = operationDayMap.get(categoryId)
-          .filter((operation: Operation) => checkedAccountIds.indexOf(operation.accountId) !== -1);
-        categoryAmounts[index] = operationList.reduce((summ: number, operation: Operation) => summ + operation.amount, 0);
-        operations[index] = operationList;
-      } else {
-        operations[index] = [];
+        categoryAmounts[index] = operationDayMap.get(categoryId)
+          .filter((operation: Operation) => checkedAccountIds.indexOf(operation.accountId) !== -1)
+          .reduce((summ: number, operation: Operation) => summ + operation.amount, 0);
       }
     });
     const operationAmountsSum = categoryAmounts.reduce((summ: number, value: number) => summ + value, 0);
+
     operationDayMap.forEach(((operationList: Operation[]) => {
       difference += operationList.reduce((sum: number, operation: Operation) => {
         return checkedAccountIds.indexOf(operation.accountId) === -1 ? sum : sum + operation.amount;
       }, 0);
     }));
 
-    return new SummaryRow(day, difference,
-      accountAmounts, balances, accountAmountsSum,
-      categoryAmounts, operations, operationAmountsSum);
+    return new SummaryRow(day, difference, accountAmounts, accountAmountsSum, categoryAmounts, operationAmountsSum);
   }
 
   private balanceListToMap(balances: Balance[]): Map<number, Map<number, Balance>> {
