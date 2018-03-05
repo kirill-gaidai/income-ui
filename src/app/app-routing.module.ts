@@ -17,6 +17,7 @@ import {OperationItemComponent} from './summaries/operations/operation-item/oper
 import {BalancesComponent} from './summaries/balances/balances.component';
 import {BalanceItemComponent} from './summaries/balances/balance-item/balance-item.component';
 import {BalanceEditComponent} from './summaries/balances/balance-edit/balance-edit.component';
+import {LoginComponent} from './auth/login/login.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
@@ -61,7 +62,8 @@ const appRoutes: Routes = [
         ]
       }
     ]
-  }
+  },
+  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({

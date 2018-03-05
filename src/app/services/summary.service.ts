@@ -1,10 +1,11 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {Http, Response, URLSearchParams} from '@angular/http';
+import {Headers, Http, Response, URLSearchParams} from '@angular/http';
 import {DateUtil} from '../utils/date.util';
 import 'rxjs/Rx';
 import {Summary} from '../models/summary.model';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {AuthService} from './auth.service';
 
 @Injectable()
 export class SummaryService implements OnInit, OnDestroy {
@@ -12,10 +13,11 @@ export class SummaryService implements OnInit, OnDestroy {
   public summariesChangedObservable: Subject<void> = new Subject<void>();
   public accuracy = 2;
 
-  // private SUMMARIES_URL = 'http://192.168.56.1:8080/income-dev/rest/summaries';
-  private SUMMARIES_URL = '/rest/summaries';
+  private SUMMARIES_URL = 'http://192.168.56.1:8080/rest/summaries';
+  // private SUMMARIES_URL = '/rest/summaries';
 
-  constructor(private http: Http) {
+  constructor(private http: Http,
+              private authService: AuthService) {
   }
 
   public ngOnInit(): void {
@@ -29,8 +31,15 @@ export class SummaryService implements OnInit, OnDestroy {
     urlSearchParams.append('currency_id', currencyId.toString());
     urlSearchParams.append('first_day', DateUtil.dateToStr(firstDay));
     urlSearchParams.append('last_day', DateUtil.dateToStr(lastDay));
+
+    const headers: Headers = new Headers();
+    if (this.authService.authentication.token) {
+      headers.append('token', this.authService.authentication.token);
+    }
+
     return this.http.get(this.SUMMARIES_URL, {
-      params: urlSearchParams
+      params: urlSearchParams,
+      headers: headers
     }).map((response: Response) => {
       const result = response.json();
       result.firstDay = DateUtil.strToDate(result.firstDay);

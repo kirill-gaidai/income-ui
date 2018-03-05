@@ -2,17 +2,20 @@ import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Currency} from '../models/currency.model';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {Http, Response} from '@angular/http';
+import {Headers, Http, Response} from '@angular/http';
+import {AuthService} from './auth.service';
 
 @Injectable()
 export class CurrencyService implements OnInit, OnDestroy {
 
   public currenciesChangedSubject: Subject<void> = new Subject<void>();
 
-  // private CURRENCIES_URL = 'http://192.168.56.1:8080/income-dev/rest/currencies';
-  private CURRENCIES_URL = '/rest/currencies';
+  private CURRENCIES_URL = 'http://192.168.56.1:8080/rest/currencies';
 
-  constructor(private http: Http) {
+  // private CURRENCIES_URL = '/rest/currencies';
+
+  constructor(private http: Http,
+              private authService: AuthService) {
   }
 
   public ngOnInit(): void {
@@ -22,28 +25,53 @@ export class CurrencyService implements OnInit, OnDestroy {
   }
 
   public getList(): Observable<Currency[]> {
-    return this.http.get(this.CURRENCIES_URL)
-      .map((response: Response) => response.json());
+    const headers: Headers = new Headers();
+    if (this.authService.authentication.token) {
+      headers.append('token', this.authService.authentication.token);
+    }
+    return this.http.get(this.CURRENCIES_URL, {
+      headers: headers
+    }).map((response: Response) => response.json());
   }
 
   public get(id: number): Observable<Currency> {
-    return this.http.get(this.CURRENCIES_URL + '/' + id)
-      .map((response: Response) => response.json());
+    const headers: Headers = new Headers();
+    if (this.authService.authentication.token) {
+      headers.append('token', this.authService.authentication.token);
+    }
+    return this.http.get(this.CURRENCIES_URL + '/' + id, {
+      headers: headers
+    }).map((response: Response) => response.json());
   }
 
   public create(currency: Currency): Observable<Currency> {
-    return this.http.post(this.CURRENCIES_URL, currency)
-      .map((response: Response) => response.json());
+    const headers: Headers = new Headers();
+    if (this.authService.authentication.token) {
+      headers.append('token', this.authService.authentication.token);
+    }
+    return this.http.post(this.CURRENCIES_URL, currency, {
+      headers: headers
+    }).map((response: Response) => response.json());
   }
-
   public update(currency: Currency): Observable<Currency> {
-    return this.http.put(this.CURRENCIES_URL, currency)
-      .map((response: Response) => response.json());
+    const headers: Headers = new Headers();
+    if (this.authService.authentication.token) {
+      headers.append('token', this.authService.authentication.token);
+    }
+    return this.http.put(this.CURRENCIES_URL, currency, {
+      headers: headers
+    }).map((response: Response) => response.json());
   }
 
   public delete(id: number): Observable<void> {
-    return this.http.delete(this.CURRENCIES_URL + '/' + id)
-      .map((response: Response) => {});
+    const headers: Headers = new Headers();
+    if (this.authService.authentication.token) {
+      headers.append('token', this.authService.authentication.token);
+    }
+    return this.http.delete(this.CURRENCIES_URL + '/' + id, {
+      headers: headers
+    }).map((response: Response) => {
+    });
   }
 
 }

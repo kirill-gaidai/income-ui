@@ -27,9 +27,11 @@ import {OperationService} from './services/operation.service';
 import {BalanceService} from './services/balance.service';
 import {OperationItemComponent} from './summaries/operations/operation-item/operation-item.component';
 import {OperationEditComponent} from './summaries/operations/operation-edit/operation-edit.component';
-import { BalancesComponent } from './summaries/balances/balances.component';
-import { BalanceEditComponent } from './summaries/balances/balance-edit/balance-edit.component';
-import { BalanceItemComponent } from './summaries/balances/balance-item/balance-item.component';
+import {BalancesComponent} from './summaries/balances/balances.component';
+import {BalanceEditComponent} from './summaries/balances/balance-edit/balance-edit.component';
+import {BalanceItemComponent} from './summaries/balances/balance-item/balance-item.component';
+import {AuthService} from './services/auth.service';
+import {LoginComponent} from './auth/login/login.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { BalanceItemComponent } from './summaries/balances/balance-item/balance-
     OperationEditComponent,
     BalancesComponent,
     BalanceEditComponent,
-    BalanceItemComponent
+    BalanceItemComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +70,7 @@ import { BalanceItemComponent } from './summaries/balances/balance-item/balance-
     SummaryService,
     BalanceService,
     OperationService,
+    AuthService
   ],
   bootstrap: [
     AppComponent

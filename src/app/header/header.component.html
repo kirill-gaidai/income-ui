@@ -9,21 +9,29 @@
     <div class="navbar-default">
 
       <ul class="nav navbar-nav">
-        <li><a routerLink="summaries">Итоги</a></li>
-        <li class="dropdown" appDropdown>
-          <a class="dropdown-toggle" role="button">Справочники<span class="caret"></span></a>
+        <li *ngIf="login"><a routerLink="summaries">Итоги</a></li>
+        <li *ngIf="login" class="dropdown" appDropdown>
+          <a class="dropdown-toggle" role="button">
+            Справочники <span class="caret"></span>
+          </a>
           <ul class="dropdown-menu">
-            <li><a routerLink="directories/currencies">Валюты</a></li>
-            <li><a routerLink="directories/categories">Категории</a></li>
-            <li><a routerLink="directories/accounts">Счета</a></li>
+            <li><a routerLink="/directories/currencies">Валюты</a></li>
+            <li><a routerLink="/directories/categories">Категории</a></li>
+            <li><a routerLink="/directories/accounts">Счета</a></li>
           </ul>
         </li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a routerLink="">Пользователь</a></li>
-        <li><a routerLink="">Вход</a></li>
-        <li><a routerLink="">Выход</a></li>
+        <li *ngIf="login"><a>
+          <span class="glyphicon glyphicon-user"></span> {{login}}
+        </a></li>
+        <li *ngIf="!login"><a routerLink="/login">
+          <span class="glyphicon glyphicon-log-in"></span> Вход
+        </a></li>
+        <li *ngIf="login"><a (click)="doOnBtLogoutClick()">
+          <span class="glyphicon glyphicon-log-out"></span> Выход
+        </a></li>
       </ul>
 
     </div>
