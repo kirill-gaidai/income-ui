@@ -13,7 +13,7 @@ import {Authentication} from '../../models/authentication.model';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  private loginForm: FormGroup;
+  public loginForm: FormGroup;
 
   private authenticationSubjectSubscription: Subscription;
 

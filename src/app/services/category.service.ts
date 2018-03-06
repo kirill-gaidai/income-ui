@@ -1,8 +1,11 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {Category} from '../models/category.model';
-import {Subject} from 'rxjs/Subject';
 import {Headers, Http, Response} from '@angular/http';
+
+import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/Rx';
+
+import {Category} from '../models/category.model';
 import {AuthService} from './auth.service';
 
 @Injectable()

@@ -1,14 +1,20 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Headers, Http, Response} from '@angular/http';
+
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/Rx';
+
 import {Credentials} from '../models/credentials.model';
 import {Authentication} from '../models/authentication.model';
-import {Headers, Http, Response} from '@angular/http';
-import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class AuthService implements OnInit, OnDestroy {
 
   private LOGIN_URL = 'http://192.168.56.1:8080/login';
   private LOGOUT_URL = 'http://192.168.56.1:8080/logout';
+
+  // private LOGIN_URL = '/login';
+  // private LOGOUT_URL = '/logout';
 
   public authentication: Authentication = new Authentication(null, null, null);
 

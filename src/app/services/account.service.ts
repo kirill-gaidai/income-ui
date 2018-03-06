@@ -1,8 +1,11 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {Account} from '../models/account.model';
 import {Headers, Http, Response} from '@angular/http';
+
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import 'rxjs/Rx';
+
+import {Account} from '../models/account.model';
 import {AuthService} from './auth.service';
 
 @Injectable()
