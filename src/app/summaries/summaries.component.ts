@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SummaryService} from '../services/summary.service';
 import {CurrencyService} from '../services/currency.service';
 import {Currency} from '../models/currency.model';
@@ -39,10 +39,15 @@ export class SummariesComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.summaryChangedSubscription = this.summaryService.summariesChangedObservable.subscribe(this.doOnBtSearchClick.bind(this));
 
+    const day: Date = new Date();
+    const lastDay: string = DateUtil.dateToStr(day);
+    day.setDate(day.getDate() - 10);
+    const firstDay: string = DateUtil.dateToStr(day);
+
     this.summaryParamsForm = new FormGroup({
-      'firstDay': new FormControl('2017-12-01'),
-      'lastDay': new FormControl('2017-12-05'),
-      'currencyId': new FormControl(null)
+      'firstDay': new FormControl(firstDay, [Validators.required, this.isValidFirstDay.bind(this)]),
+      'lastDay': new FormControl(lastDay, [Validators.required, this.isValidLastDay.bind(this)]),
+      'currencyId': new FormControl(null, [Validators.required])
     });
     this.accountsFilterForm = new FormGroup({
       'accounts': new FormArray([])
@@ -139,6 +144,50 @@ export class SummariesComponent implements OnInit, OnDestroy {
 
   public doOnBtDownloadClick(): void {
     this.summaryService.saveToXLSXFile(this.summaryService.transformSummaryTableToArrays(this.summaryTable));
+  }
+
+  private isValidFirstDay(formControl: FormControl): {[str: string]: boolean} {
+    // Summary search parameters form is not initialized
+    if (!this.summaryParamsForm) {
+      return null;
+    }
+
+    const firstDay: string = formControl.value;
+    if (!firstDay) {
+      return null;
+    }
+
+    const lastDay: string = this.summaryParamsForm.get('lastDay').value;
+    if (!lastDay) {
+      return null;
+    }
+
+    if (DateUtil.strToDate(lastDay) >= DateUtil.strToDate(firstDay)) {
+      return null;
+    }
+    return {'firstDayGreaterThanLastDay': true};
+  }
+
+  private isValidLastDay(formControl: FormControl) {
+    // Summary search parameters form is not initialized
+    if (!this.summaryParamsForm) {
+      return null;
+    }
+
+    const firstDay: string = this.summaryParamsForm.get('firstDay').value;
+    if (!firstDay) {
+      return null;
+    }
+
+    const lastDay: string = formControl.value;
+    if (!lastDay) {
+      return null;
+    }
+
+    if (DateUtil.strToDate(lastDay) >= DateUtil.strToDate(firstDay)) {
+      return null;
+    }
+    return {'lastDayLessThanFirstDay': true};
   }
 
 }

@@ -10,20 +10,34 @@
             [{{currency.code}}] {{currency.title}}
           </option>
         </select>
+        <span
+          *ngIf="!summaryParamsForm.get('currencyId').valid && summaryParamsForm.get('currencyId').touched"
+          class="help-block">Обязательное</span>
       </div>
 
       <div class="form-group">
         <label for="firstDay">дата с</label>
         <input id="firstDay" type="date" class="form-control" formControlName="firstDay">
+        <span
+          *ngIf="!summaryParamsForm.get('firstDay').valid && summaryParamsForm.get('firstDay').touched"
+          class="help-block">Обязательное, не больше даты по</span>
       </div>
 
       <div class="form-group">
         <label for="lastDay">дата по</label>
         <input id="lastDay" type="date" class="form-control" formControlName="lastDay">
+        <span
+          *ngIf="!summaryParamsForm.get('lastDay').valid && summaryParamsForm.get('lastDay').touched"
+          class="help-block">Обязательное, не мешьше даты с</span>
       </div>
 
-      <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span>Поиск</button>
-      <button type="button" class="btn btn-primary" (click)="doOnBtDownloadClick()">
+      <button type="submit" class="btn btn-primary" [disabled]="!summaryParamsForm.valid">
+        <span class="glyphicon glyphicon-search"></span> Поиск
+      </button>
+      <button
+        type="button" class="btn btn-primary"
+        (click)="doOnBtDownloadClick()"
+        [disabled]="!summaryTable.rows.length">
         <span class="glyphicon glyphicon-download"></span> Соханить
       </button>
 
