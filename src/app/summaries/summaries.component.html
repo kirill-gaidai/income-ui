@@ -1,130 +1,129 @@
-<div class="col-xs-12">
+<div class="row">
+  <form [formGroup]="summaryParamsForm" class="form-inline" (submit)="doOnBtSearchClick()">
 
-  <div class="row">
-    <form [formGroup]="summaryParamsForm" class="form-inline" (submit)="doOnBtSearchClick()">
-
-      <div class="form-group">
-        <label for="currencyId">Валюта</label>
-        <select id="currencyId" class="form-control" formControlName="currencyId">
-          <option *ngFor="let currency of currencies" [value]="currency.id">
-            [{{currency.code}}] {{currency.title}}
-          </option>
-        </select>
-        <span
-          *ngIf="!summaryParamsForm.get('currencyId').valid && summaryParamsForm.get('currencyId').touched"
-          class="help-block">Обязательное</span>
-      </div>
-
-      <div class="form-group">
-        <label for="firstDay">дата с</label>
-        <input id="firstDay" type="date" class="form-control" formControlName="firstDay">
-        <span
-          *ngIf="!summaryParamsForm.get('firstDay').valid && summaryParamsForm.get('firstDay').touched"
-          class="help-block">Обязательное, не больше даты по</span>
-      </div>
-
-      <div class="form-group">
-        <label for="lastDay">дата по</label>
-        <input id="lastDay" type="date" class="form-control" formControlName="lastDay">
-        <span
-          *ngIf="!summaryParamsForm.get('lastDay').valid && summaryParamsForm.get('lastDay').touched"
-          class="help-block">Обязательное, не мешьше даты с</span>
-      </div>
-
-      <button type="submit" class="btn btn-primary" [disabled]="!summaryParamsForm.valid">
-        <span class="glyphicon glyphicon-search"></span> Поиск
-      </button>
-      <button
-        type="button" class="btn btn-primary"
-        (click)="doOnBtDownloadClick()"
-        [disabled]="!summaryTable.rows.length">
-        <span class="glyphicon glyphicon-download"></span> Соханить
-      </button>
-
-    </form>
-  </div>
-
-  <div class="row">
-    <form [formGroup]="accountsFilterForm" class="form-inline">
-      <div formArrayName="accounts" class="checkbox">
-        <label *ngFor="let accountControl of accountsFilterForm.get('accounts')['controls']; let i = index">
-          <input type="checkbox" [formControlName]="i"> {{accounts[i].title}}
-        </label>
-      </div>
-    </form>
-  </div>
-
-  <div class="row">
-    <form [formGroup]="categoriesFilterForm" class="form-inline">
-      <div formArrayName="categories" class="checkbox">
-        <label *ngFor="let categoryControl of categoriesFilterForm.get('categories')['controls']; let i = index">
-          <input type="checkbox" [formControlName]="i"> {{categories[i].title}}
-        </label>
-      </div>
-    </form>
-  </div>
-
-  <div class="row">
-    <table class="table table-bordered">
-      <tr class="bg-info">
-        <th>День</th>
-        <th>Разность</th>
-        <th *ngFor="let accountTitle of summaryTable.accountTitles">{{accountTitle}}</th>
-        <th>Сумма</th>
-        <th *ngFor="let categoryTitle of summaryTable.categoryTitles">{{categoryTitle}}</th>
-        <th>Сумма</th>
-      </tr>
-      <tr *ngFor="let row of summaryTable.rows">
-        <td class="bg-info">{{row.day | date:'dd.MM.yyyy' }}</td>
-        <td class="bg-info" style="text-align: right">{{row.difference | number:numberFormat}}</td>
-        <td
-          style="text-align: right"
-          *ngFor="let accountAmount of row.accountAmounts; let i = index"
-          routerLink="balance/view"
-          [queryParams]="{
-            day: row.day | date:'yyyy-MM-dd',
-            account_id: summaryTable.accountIds[i]
-          }"
-        >{{accountAmount | number:numberFormat}}</td>
-        <td class="bg-info" style="text-align: right">{{row.accountAmountsSum | number:numberFormat}}</td>
-        <td
-          style="text-align: right"
-          *ngFor="let categoryAmount of row.categoryAmounts; let i = index"
-          routerLink="operations"
-          [queryParams]="{
-            day: row.day | date:'yyyy-MM-dd',
-            account_id: summaryTable.accountIds,
-            category_id: summaryTable.categoryIds[i]
-          }"
-        >{{categoryAmount | number:numberFormat}}</td>
-        <td
-          class="bg-info"
-          style="text-align: right"
-          routerLink="operations"
-          [queryParams]="{
-            day: row.day | date:'yyyy-MM-dd',
-            account_id: summaryTable.accountIds,
-            category_id: summaryTable.categoryIds
-          }"
-        >{{row.categoryAmountsSum | number:numberFormat}}</td>
-      </tr>
-      <tr class="bg-info">
-        <td></td>
-        <td></td>
-        <th *ngFor="let accountTitle of summaryTable.accountTitles"></th>
-        <th></th>
-        <th
-          style="text-align: right"
-          *ngFor="let categoryAmount of summaryTable.categoryAmounts">{{categoryAmount | number:numberFormat}}</th>
-        <th style="text-align: right">{{summaryTable.categoryAmountsSum | number:numberFormat}}</th>
-      </tr>
-    </table>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <router-outlet></router-outlet>
+    <div class="form-group">
+      <label for="currencyId">Валюта</label>
+      <select id="currencyId" class="form-control" formControlName="currencyId">
+        <option *ngFor="let currency of currencies" [value]="currency.id">
+          [{{currency.code}}] {{currency.title}}
+        </option>
+      </select>
+      <span
+        *ngIf="!summaryParamsForm.get('currencyId').valid && summaryParamsForm.get('currencyId').touched"
+        class="help-block">Обязательное</span>
     </div>
-  </div>
 
+    <div class="form-group">
+      <label for="firstDay">дата с</label>
+      <input id="firstDay" type="date" class="form-control" formControlName="firstDay">
+      <span
+        *ngIf="!summaryParamsForm.get('firstDay').valid && summaryParamsForm.get('firstDay').touched"
+        class="help-block">Обязательное, не больше даты по</span>
+    </div>
+
+    <div class="form-group">
+      <label for="lastDay">дата по</label>
+      <input id="lastDay" type="date" class="form-control" formControlName="lastDay">
+      <span
+        *ngIf="!summaryParamsForm.get('lastDay').valid && summaryParamsForm.get('lastDay').touched"
+        class="help-block">Обязательное, не мешьше даты с</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!summaryParamsForm.valid">
+      <span class="glyphicon glyphicon-search"></span> Поиск
+    </button>
+
+    <button
+      type="button" class="btn btn-primary"
+      (click)="doOnBtDownloadClick()"
+      [disabled]="!summaryTable.rows.length">
+      <span class="glyphicon glyphicon-download"></span> Соханить
+    </button>
+
+  </form>
+</div>
+
+<div class="row">
+  <form [formGroup]="accountsFilterForm" class="form-inline">
+    <div formArrayName="accounts" class="checkbox">
+      <label *ngFor="let accountControl of accountsFilterForm.get('accounts')['controls']; let i = index">
+        <input type="checkbox" [formControlName]="i"> {{accounts[i].title}}
+      </label>
+    </div>
+  </form>
+</div>
+
+<div class="row">
+  <form [formGroup]="categoriesFilterForm" class="form-inline">
+    <div formArrayName="categories" class="checkbox">
+      <label *ngFor="let categoryControl of categoriesFilterForm.get('categories')['controls']; let i = index">
+        <input type="checkbox" [formControlName]="i"> {{categories[i].title}}
+      </label>
+    </div>
+  </form>
+</div>
+
+<div class="row">
+  <table class="table table-bordered">
+
+    <tr class="bg-info">
+      <th>День</th>
+      <th>Разность</th>
+      <th *ngFor="let accountTitle of summaryTable.accountTitles">{{accountTitle}}</th>
+      <th>Сумма</th>
+      <th *ngFor="let categoryTitle of summaryTable.categoryTitles">{{categoryTitle}}</th>
+      <th>Сумма</th>
+    </tr>
+
+    <tr *ngFor="let row of summaryTable.rows">
+      <td class="bg-info">{{row.day | date:'dd.MM.yyyy' }}</td>
+      <td class="bg-info" style="text-align: right">{{row.difference | number:numberFormat}}</td>
+      <td
+        style="text-align: right"
+        *ngFor="let accountAmount of row.accountAmounts; let i = index"
+        routerLink="balance/view"
+        [queryParams]="{
+          day: row.day | date:'yyyy-MM-dd',
+          account_id: summaryTable.accountIds[i]
+        }"
+      >{{accountAmount | number:numberFormat}}</td>
+      <td class="bg-info" style="text-align: right">{{row.accountAmountsSum | number:numberFormat}}</td>
+      <td
+        style="text-align: right"
+        *ngFor="let categoryAmount of row.categoryAmounts; let i = index"
+        routerLink="operations"
+        [queryParams]="{
+          day: row.day | date:'yyyy-MM-dd',
+          account_id: summaryTable.accountIds,
+          category_id: summaryTable.categoryIds[i]
+        }"
+      >{{categoryAmount | number:numberFormat}}</td>
+      <td
+        class="bg-info"
+        style="text-align: right"
+        routerLink="operations"
+        [queryParams]="{
+          day: row.day | date:'yyyy-MM-dd',
+          account_id: summaryTable.accountIds,
+          category_id: summaryTable.categoryIds
+        }"
+      >{{row.categoryAmountsSum | number:numberFormat}}</td>
+    </tr>
+
+    <tr class="bg-info">
+      <td></td>
+      <td></td>
+      <th *ngFor="let accountTitle of summaryTable.accountTitles"></th>
+      <th></th>
+      <th
+        style="text-align: right"
+        *ngFor="let categoryAmount of summaryTable.categoryAmounts">{{categoryAmount | number:numberFormat}}</th>
+      <th style="text-align: right">{{summaryTable.categoryAmountsSum | number:numberFormat}}</th>
+    </tr>
+
+  </table>
+</div>
+
+<div class="row">
+  <router-outlet></router-outlet>
 </div>

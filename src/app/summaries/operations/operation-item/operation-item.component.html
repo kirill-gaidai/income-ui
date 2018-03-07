@@ -4,16 +4,8 @@
     <td>{{operation.id}}</td>
   </tr>
   <tr>
-    <th>Код счета</th>
-    <td>{{operation.accountId}}</td>
-  </tr>
-  <tr>
     <th>Наименование счета</th>
     <td>{{operation.accountTitle}}</td>
-  </tr>
-  <tr>
-    <th>Код категории</th>
-    <td>{{operation.categoryId}}</td>
   </tr>
   <tr>
     <th>Наименование категории</th>
@@ -33,5 +25,10 @@
   </tr>
 </table>
 
-<button class="btn btn-primary" type="button" (click)="doOnBtEditClick()">Редактировать</button>
-<button class="btn btn-danger" type="button" (click)="doOnBtDeleteClick()">Удалить</button>
+<button class="btn btn-primary" type="button" (click)="doOnBtEditClick()">
+  <span class="glyphicon glyphicon-pencil"></span> Редактировать
+</button>
+
+<button class="btn btn-danger" type="button" (click)="doOnBtDeleteClick()">
+  <span class="glyphicon glyphicon-remove"></span> Удалить
+</button>

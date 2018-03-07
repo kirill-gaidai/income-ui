@@ -37,8 +37,7 @@
     <input id="amount" type="number" class="form-control" formControlName="amount">
     <span
       *ngIf="!operationEditForm.get('amount').valid && operationEditForm.get('amount').touched"
-      class="help-block">
-      до 10 знаков до запятой, до {{accuracy}} - после
+      class="help-block">до 10 знаков до запятой, до {{accuracy}} - после
     </span>
   </div>
 
@@ -50,7 +49,12 @@
       class="help-block">До 250 символов</span>
   </div>
 
-  <button class="btn btn-primary" type="submit" [disabled]="!operationEditForm.valid">Сохранить</button>
-  <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">Отменить</button>
+  <button class="btn btn-primary" type="submit" [disabled]="!operationEditForm.valid">
+    <span class="glyphicon glyphicon-ok"></span> Сохранить
+  </button>
+
+  <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">
+    <span class="glyphicon glyphicon-arrow-left"></span> Отменить
+  </button>
 
 </form>

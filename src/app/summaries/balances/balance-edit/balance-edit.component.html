@@ -1,25 +1,34 @@
 <form [formGroup]="balanceEditForm" (submit)="doOnBtSaveClick()">
+
   <div class="form-group">
     <label for="accountTitle">Наименование счета</label>
     <input id="accountTitle" type="text" class="form-control" formControlName="accountTitle" readonly>
   </div>
+
   <div class="form-group">
     <label for="day">День</label>
     <input id="day" type="date" class="form-control" formControlName="day" readonly>
   </div>
+
   <div class="form-group">
     <label for="amount">Остаток</label>
     <input id="amount" type="number" class="form-control" formControlName="amount">
     <span
-      class="help-block"
-      *ngIf="!balanceEditForm.get('amount').valid && balanceEditForm.get('amount').touched">
-      до 10 знаков до запятой, до {{accuracy}} - после
+      *ngIf="!balanceEditForm.get('amount').valid && balanceEditForm.get('amount').touched"
+      class="help-block">до 10 знаков до запятой, до {{accuracy}} - после
     </span>
   </div>
+
   <div class="checkbox">
     <label><input type="checkbox" formControlName="manual"> Зафиксировать</label>
   </div>
 
-  <button type="submit" class="btn btn-primary" [disabled]="!balanceEditForm.valid">Сохранить</button>
-  <button type="button" class="btn btn-warning" (click)="doOnBtCancelClick()">Отменить</button>
+  <button type="submit" class="btn btn-primary" [disabled]="!balanceEditForm.valid">
+    <span class="glyphicon glyphicon-ok"></span> Сохранить
+  </button>
+
+  <button type="button" class="btn btn-warning" (click)="doOnBtCancelClick()">
+    <span class="glyphicon glyphicon-arrow-left"></span> Отменить
+  </button>
+
 </form>

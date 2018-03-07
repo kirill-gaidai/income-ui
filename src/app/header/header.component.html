@@ -2,22 +2,43 @@
   <div class="container-fluid">
 
     <div class="navbar-header">
-      <a routerLink="" class="navbar-brand">Income</a>
+      <a class="navbar-brand">Income</a>
     </div>
 
     <!--<div class="collapse navbar-collapse">-->
     <div class="navbar-default">
 
       <ul class="nav navbar-nav">
-        <li *ngIf="login"><a routerLink="summaries">Итоги</a></li>
+        <li>
+          <a routerLink="">
+            <span class="glyphicon glyphicon-home"></span> На главную
+          </a>
+        </li>
+        <li *ngIf="login">
+          <a routerLink="summaries">
+            <span class="glyphicon glyphicon-credit-card"></span> Итоги
+          </a>
+        </li>
         <li *ngIf="login" class="dropdown" appDropdown>
           <a class="dropdown-toggle" role="button">
-            Справочники <span class="caret"></span>
+            <span class="glyphicon glyphicon-book"></span> Справочники <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a routerLink="/directories/currencies">Валюты</a></li>
-            <li><a routerLink="/directories/categories">Категории</a></li>
-            <li><a routerLink="/directories/accounts">Счета</a></li>
+            <li>
+              <a routerLink="/directories/currencies">
+                <span class="glyphicon glyphicon-usd"></span> Валюты
+              </a>
+            </li>
+            <li>
+              <a routerLink="/directories/categories">
+                <span class="glyphicon glyphicon-list"></span> Категории
+              </a>
+            </li>
+            <li>
+              <a routerLink="/directories/accounts">
+                <span class="glyphicon glyphicon-piggy-bank"></span> Счета
+              </a>
+            </li>
           </ul>
         </li>
       </ul>
@@ -29,7 +50,7 @@
         <li *ngIf="!login"><a routerLink="/login">
           <span class="glyphicon glyphicon-log-in"></span> Вход
         </a></li>
-        <li *ngIf="login"><a (click)="doOnBtLogoutClick()">
+        <li *ngIf="login"><a style="cursor: pointer" (click)="doOnBtLogoutClick()">
           <span class="glyphicon glyphicon-log-out"></span> Выход
         </a></li>
       </ul>

@@ -1,38 +1,42 @@
-<div class="row">
-  <div class="col-xs-8">
-    <div class="row">
+<div class="col-sm-8">
+  <div class="row">
 
-      <button class="btn btn-primary" (click)="doOnBtAddClick()">Добавить</button>
-      <button class="btn btn-primary" (click)="doOnBtRefreshClick()">Обновить</button>
+    <button class="btn btn-primary" (click)="doOnBtAddClick()">
+      <span class="glyphicon glyphicon-plus"></span> Добавить
+    </button>
 
-      <hr>
+    <button class="btn btn-primary" (click)="doOnBtRefreshClick()">
+      <span class="glyphicon glyphicon-refresh"></span> Обновить
+    </button>
 
-      <table class="table">
-        <tr>
-          <th>#</th>
-          <th>Наименование счета</th>
-          <th>Наименование категории</th>
-          <th>День</th>
-          <th>Сумма</th>
-          <th>Комментарий</th>
-        </tr>
-        <tr
-          *ngFor="let operation of operations"
-          [routerLink]="operation.id">
-          <td>{{operation.id}}</td>
-          <td>{{operation.accountTitle}}</td>
-          <td>{{operation.categoryTitle}}</td>
-          <td>{{operation.day | date:'dd.MM.yyyy'}}</td>
-          <td>{{operation.amount | number:numberFormat}}</td>
-          <td>{{operation.note}}</td>
-        </tr>
-      </table>
+    <hr>
 
-    </div>
+    <table class="table">
+      <tr>
+        <th>#</th>
+        <th>Наименование счета</th>
+        <th>Наименование категории</th>
+        <th>День</th>
+        <th>Сумма</th>
+        <th>Комментарий</th>
+      </tr>
+      <tr
+        *ngFor="let operation of operations"
+        [routerLink]="operation.id">
+        <td>{{operation.id}}</td>
+        <td>{{operation.accountTitle}}</td>
+        <td>{{operation.categoryTitle}}</td>
+        <td>{{operation.day | date:'dd.MM.yyyy'}}</td>
+        <td>{{operation.amount | number:numberFormat}}</td>
+        <td>{{operation.note}}</td>
+      </tr>
+    </table>
+
   </div>
-  <div class="col-xs-4">
-    <div class="row">
-      <router-outlet></router-outlet>
-    </div>
+</div>
+
+<div class="col-sm-4">
+  <div class="row">
+    <router-outlet></router-outlet>
   </div>
 </div>

@@ -21,7 +21,12 @@
       class="help-block">От 1 до 250 символов</span>
   </div>
 
-  <button class="btn btn-primary" type="submit" [disabled]="!categoryEditForm.valid">Сохранить</button>
-  <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">Отменить</button>
+  <button class="btn btn-primary" type="submit" [disabled]="!categoryEditForm.valid">
+    <span class="glyphicon glyphicon-ok"></span> Сохранить
+  </button>
+
+  <button class="btn btn-warning" type="button" (click)="doOnBtCancelClick()">
+    <span class="glyphicon glyphicon-arrow-left"></span> Отменить
+  </button>
 
 </form>
