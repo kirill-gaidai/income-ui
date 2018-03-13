@@ -72,25 +72,29 @@ export class SummaryService implements OnInit, OnDestroy {
     footer.push(null);
     summaryTable.categoryTitles.forEach((categoryTitle: string, index: number) => {
       header.push(categoryTitle);
-      footer.push(summaryTable.categoryAmounts[index]);
+      footer.push(this.closeToZero(summaryTable.categoryAmounts[index]));
     });
     header.push('Сумма');
-    footer.push(summaryTable.categoryAmountsSum);
+    footer.push(this.closeToZero(summaryTable.categoryAmountsSum));
     data.push(header);
     summaryTable.rows.forEach((summaryRow: SummaryRow) => {
-      const row: any[] = [summaryRow.day, summaryRow.difference];
+      const row: any[] = [summaryRow.day, this.closeToZero(summaryRow.difference)];
       summaryRow.accountAmounts.forEach((accountAmount: number) => {
-        row.push(accountAmount);
+        row.push(this.closeToZero(accountAmount));
       });
-      row.push(summaryRow.accountAmountsSum);
+      row.push(this.closeToZero(summaryRow.accountAmountsSum));
       summaryRow.categoryAmounts.forEach((categoryAmount: number) => {
-        row.push(categoryAmount);
+        row.push(this.closeToZero(categoryAmount));
       });
-      row.push(summaryRow.categoryAmountsSum);
+      row.push(this.closeToZero(summaryRow.categoryAmountsSum));
       data.push(row);
     });
     data.push(footer);
     return data;
+  }
+
+  private closeToZero(value: number): number {
+    return value < 0.0001 ? 0 : value;
   }
 
   public saveToXLSXFile(data: any[][]) {
