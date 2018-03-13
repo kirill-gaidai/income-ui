@@ -5,14 +5,24 @@
     <div class="form-group">
       <label for="login">Пользователь</label>
       <input type="text" id="login" class="form-control" formControlName="login">
+      <span
+        *ngIf="!loginForm.get('login').value && loginForm.get('login').touched"
+        class="help-block">Введите логин</span>
     </div>
 
     <div class="form-group">
       <label for="password">Пароль</label>
       <input type="password" id="password" class="form-control" formControlName="password">
+      <span
+        *ngIf="!loginForm.get('password').value && loginForm.get('password').touched"
+        class="help-block">Введите пароль</span>
     </div>
 
-    <button type="submit" class="btn btn-primary">
+    <div *ngIf="errorMessage" class="form-group">
+      <div class="alert alert-danger">{{errorMessage}}</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">
       <span class="glyphicon glyphicon-log-in"></span> Войти
     </button>
 

@@ -6,6 +6,7 @@ import 'rxjs/Rx';
 
 import {Credentials} from '../models/credentials.model';
 import {Authentication} from '../models/authentication.model';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class AuthService implements OnInit, OnDestroy {
@@ -29,8 +30,8 @@ export class AuthService implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  login(credentials: Credentials): void {
-    this.http.post(this.LOGIN_URL, credentials).subscribe((response: Response) => {
+  login(credentials: Credentials): Observable<void> {
+    return this.http.post(this.LOGIN_URL, credentials).map((response: Response) => {
       const result = response.json();
       result.expires = new Date(result.expires);
       this.authentication = result;
@@ -39,23 +40,17 @@ export class AuthService implements OnInit, OnDestroy {
     });
   }
 
-  logout(): void {
+  logout(): Observable<void> {
     const headers: Headers = new Headers();
     if (this.authentication.token) {
       headers.append('token', this.authentication.token);
     }
-    this.http.get(this.LOGOUT_URL, {
+    return this.http.get(this.LOGOUT_URL, {
       headers: headers
-    }).subscribe((response: Response) => {
+    }).map((response: Response) => {
       this.authentication = new Authentication(null, null, null);
       this.authenticationSubject.next(this.authentication);
     });
-  }
-
-  isAuthenticated(): boolean {
-    const now: Date = new Date();
-    return this.authentication.expires !== null && now < this.authentication.expires
-      && this.authentication.token !== null && this.authentication.token !== '';
   }
 
 }

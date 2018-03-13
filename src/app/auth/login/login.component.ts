@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Credentials} from '../../models/credentials.model';
 import {Subscription} from 'rxjs/Subscription';
@@ -13,9 +13,8 @@ import {Authentication} from '../../models/authentication.model';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
+  public errorMessage = '';
   public loginForm: FormGroup;
-
-  private authenticationSubjectSubscription: Subscription;
 
   constructor(private authService: AuthService,
               private router: Router) {
@@ -23,23 +22,27 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      'login': new FormControl('', []),
-      'password': new FormControl('', [])
-    });
-    this.authenticationSubjectSubscription = this.authService.authenticationSubject.subscribe((authentication: Authentication) => {
-      this.router.navigate(['/']);
+      'login': new FormControl('', [Validators.required]),
+      'password': new FormControl('', [Validators.required])
     });
   }
 
   ngOnDestroy(): void {
-    this.authenticationSubjectSubscription.unsubscribe();
   }
 
   doOnBtLoginClick(): void {
     this.authService.login(new Credentials(
       this.loginForm.get('login').value,
       this.loginForm.get('password').value
-    ));
+    )).subscribe(() => {
+      this.router.navigate(['/']);
+    }, (response: Response) => {
+      if (response.status === 403) {
+        this.errorMessage = 'Неверный логин или пароль';
+        return;
+      }
+      this.errorMessage = 'Неизвестная ошибка';
+    });
   }
 
 }
